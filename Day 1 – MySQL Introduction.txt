@@ -1,0 +1,358 @@
+# Day 1 – MySQL Introduction
+
+## Full Stack Development
+
+Full Stack Development consists of:
+
+* Frontend
+* Backend
+
+## Frontend
+
+The frontend is the visual and interactive part of a website or application that users directly see and interact with through a web browser or mobile application.
+
+### Responsibilities of Frontend
+
+1. Display web pages and User Interface (UI).
+2. Accept user input through forms, buttons, search boxes, etc.
+3. Perform basic validation of user input.
+4. Call backend APIs to fetch or send data.
+5. Display responses received from the backend.
+6. Provide animations and interactive effects.
+
+### Common Frontend Technologies
+
+* HTML
+* CSS
+* JavaScript
+* React
+* Angular
+* Vue.js
+
+## Backend
+
+The backend is the server-side part of an application. Users cannot directly see the backend. It handles business logic, data processing, authentication, security, database operations, and communication with the frontend.
+
+### Responsibilities of Backend
+
+1. Process client requests.
+2. Implement business logic.
+3. Connect with databases.
+4. Perform CRUD operations.
+5. Authenticate and authorize users.
+6. Securely store passwords and sensitive information.
+7. Generate reports and process data.
+8. Send emails and notifications.
+9. Handle file uploads and downloads.
+10. Return responses to the client through APIs.
+
+### Common Backend Technologies
+
+* Python
+* Java
+* Node.js
+* PHP
+* C#
+* Go
+
+## MySQL Introduction
+
+**MySQL** is an open-source **Relational Database Management System (RDBMS)**.
+
+It stores data in the form of tables consisting of rows and columns.
+
+MySQL uses **SQL (Structured Query Language)** to create, read, update, and delete data.
+
+### Example
+
+| Employee ID | Name  | Salary | Department |
+| ----------- | ----- | -----: | ---------- |
+| 101         | Ravi  |  78000 | Java       |
+| 102         | Malli |  60000 | Python     |
+
+## Why Do We Need Databases?
+
+Applications need to store different types of information such as:
+
+* Customer information
+* Employee information
+* Product information
+* Billing information
+* Student information
+* Transaction information
+
+Databases help store, organize, manage, and retrieve data efficiently.
+
+## File-Based Storage
+
+When data is stored directly in files such as `.txt` or `.csv`, several problems can occur as the amount of data increases.
+
+### Problems with File-Based Storage
+
+* Data redundancy
+* Data inconsistency
+* Limited security and access control
+* Difficult data searching and retrieval
+* Difficult data relationships
+* Difficult backup and recovery
+* Difficult maintenance when data grows
+
+## Database
+
+A **database** is an organized collection of related data that can be stored, managed, and retrieved efficiently.
+
+### Advantages of Databases
+
+1. Reduce unnecessary data duplication.
+2. Provide better security and access control.
+3. Make data easier to search and retrieve.
+4. Handle large amounts of data.
+5. Support data integrity and consistency.
+6. Support multiple users and applications.
+7. Provide backup and recovery mechanisms.
+8. Allow relationships between related data.
+
+## API – Application Programming Interface
+
+**API** stands for **Application Programming Interface**.
+
+An API is a set of rules and protocols that allows different software applications or systems to communicate and exchange data without exposing their internal implementation.
+
+An API acts as a bridge between the frontend and backend or between different software systems.
+
+### Example
+
+```text
+Frontend
+   ↓
+API
+   ↓
+Backend
+   ↓
+Database
+   ↓
+Backend
+   ↓
+API Response
+   ↓
+Frontend
+```
+
+## Storage Areas
+
+Applications require storage areas to store data.
+
+There are two major types of storage:
+
+1. Temporary Storage
+2. Permanent (Persistent) Storage
+
+### 1. Temporary Storage
+
+Temporary storage is used to store data for a limited period of time.
+
+Examples:
+
+* RAM
+* JVM Heap Memory
+* JVM Stack Memory
+* Temporary Application Memory
+
+JVM heap and stack memory are cleared when the JVM process terminates.
+
+### 2. Permanent Storage
+
+Permanent storage is also called **Persistent Storage**.
+
+It stores data so that it remains available after an application or system is restarted.
+
+Examples:
+
+* File Systems
+* Databases
+* Data Warehouses
+* Cloud Storage
+* Persistent Storage Systems
+
+## File Management System (FMS)
+
+A **File Management System** is a system in which data is stored and managed using files provided by the operating system.
+
+In a file-based system, application programs generally handle data storage, retrieval, modification, and management.
+
+### Example
+
+```text
+books.txt
+members.txt
+transactions.txt
+```
+
+## Limitations of File Management Systems
+
+### 1. Data Redundancy
+
+The same data may be stored in multiple files.
+
+### 2. Data Inconsistency
+
+If data is updated in one file but not another, different files may contain different versions of the same data.
+
+### 3. Limited Data Security
+
+File systems may provide limited authentication, authorization, and access-control mechanisms compared with DBMSs.
+
+### 4. Difficult Data Retrieval
+
+Complex searches may require custom application programs.
+
+### 5. Data Integrity Issues
+
+Maintaining rules such as unique IDs, valid values, and relationships between data can be difficult.
+
+### 6. Scalability Issues
+
+Managing and maintaining large amounts of data becomes increasingly difficult.
+
+### 7. Difficult Backup and Recovery
+
+Reliable backup and recovery may require additional application-level mechanisms.
+
+## DBMS – Database Management System
+
+**DBMS** stands for **Database Management System**.
+
+A DBMS is software that allows users and applications to create, store, manage, retrieve, update, and delete data in databases.
+
+### Examples of DBMS
+
+* MySQL
+* PostgreSQL
+* Oracle Database
+* Microsoft SQL Server
+* SQLite
+
+## Advantages of DBMS
+
+1. Manage large amounts of data efficiently.
+2. Provide query languages for data operations.
+3. Provide authentication and authorization.
+4. Maintain data consistency and integrity.
+5. Support multiple users and concurrent access.
+6. Provide backup and recovery features.
+7. Support relationships between data.
+8. Provide transaction management.
+9. Reduce unnecessary data redundancy.
+10. Provide better data management than basic file systems.
+
+## Important Note
+
+Modern database systems can store and manage **very large amounts of data**, including terabytes or more, depending on the database system, hardware, architecture, and configuration.
+
+Relational databases primarily organize data in structured tables. However, modern relational databases such as MySQL also support **JSON and semi-structured data**.
+
+## FMS vs DBMS
+
+| File Management System                             | DBMS                                               |
+| -------------------------------------------------- | -------------------------------------------------- |
+| Data is stored in separate files                   | Data is managed in databases                       |
+| Higher possibility of data redundancy              | Helps reduce data redundancy                       |
+| Data maintenance can be difficult                  | Easier data management                             |
+| Limited security mechanisms                        | Provides stronger security and access control      |
+| Data sharing can be difficult                      | Supports multiple users and applications           |
+| Relationships are difficult to manage              | Supports relationships between tables              |
+| Backup and recovery may require custom solutions   | Provides backup and recovery mechanisms            |
+| Suitable for simple applications                   | Suitable for small, medium, and large applications |
+| Complex data retrieval may require custom programs | SQL makes data retrieval easier                    |
+| Data integrity is harder to enforce                | Provides constraints and integrity mechanisms      |
+
+## Interview Question
+
+### Q: What is the difference between a File System and a DBMS?
+
+A **File System** stores data in separate files and may cause problems such as data redundancy, inconsistency, limited security, and difficult data retrieval.
+
+A **DBMS** stores and manages data in an organized manner and provides features such as security, data integrity, concurrency, backup and recovery, and efficient data retrieval.
+
+## Data, Field, Record, and Database
+
+### 1. Data
+
+**Data** refers to raw facts and figures that can be processed to obtain meaningful information.
+
+Examples:
+
+```text
+101
+Ravi
+78000
+Java
+```
+
+### 2. Field
+
+A **field** is a single attribute or column used to represent a specific type of data.
+
+Example:
+
+```text
+Employee ID
+Employee Name
+Salary
+Department
+```
+
+### 3. Record
+
+A **record** is a collection of related fields representing one particular entity or entry.
+
+Example:
+
+```text
+(101, 'Ravi', 78000, 'Java')
+```
+
+### 4. Database
+
+A **database** is an organized collection of related data that can be stored, managed, and retrieved efficiently.
+
+Example:
+
+```text
+Employee Database
+    ↓
+101 → Ravi
+102 → Malli
+103 → Kumar
+```
+
+## Quick Revision
+
+```text
+Full Stack
+├── Frontend
+│   ├── UI
+│   ├── User Input
+│   └── API Calls
+│
+└── Backend
+    ├── Business Logic
+    ├── Authentication
+    ├── Database Operations
+    └── APIs
+
+Database
+   ↓
+DBMS
+   ↓
+RDBMS
+   ↓
+MySQL
+   ↓
+Tables
+   ↓
+Rows + Columns
+   ↓
+SQL
+```
+
