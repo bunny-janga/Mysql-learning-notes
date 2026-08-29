@@ -1,0 +1,375 @@
+ Day 4 – SQL Data Types & Table Operations
+
+## 📌 Topics Covered
+
+1. Data Types in SQL
+2. ALTER TABLE
+3. DROP TABLE
+4. TRUNCATE TABLE
+5. Difference Between DELETE, TRUNCATE and DROP
+
+---
+
+# 1. Data Types in SQL
+
+SQL Data Types define the type of data that can be stored in a column of a database table.
+
+Choosing the correct data type is important because it helps maintain data accuracy, reduces storage requirements, and improves database performance.
+
+## Common SQL Data Types
+
+### INT
+
+`INT` is used to store whole numbers without decimal values.
+
+**Examples:**
+
+* 10
+* 25
+* 100
+* 500
+
+**Uses:**
+
+* Age
+* ID numbers
+* Quantity
+* Count
+
+---
+
+### VARCHAR
+
+`VARCHAR` is used to store variable-length text.
+
+**Examples:**
+
+* Student names
+* Email addresses
+* Phone numbers
+* Addresses
+
+The number inside `VARCHAR()` specifies the maximum number of characters that can be stored.
+
+**Example:**
+
+`VARCHAR(50)` can store up to 50 characters.
+
+---
+
+### CHAR
+
+`CHAR` is used to store fixed-length character data.
+
+It is useful when the length of the data is always approximately the same.
+
+**Examples:**
+
+* Country codes
+* Fixed identification codes
+
+---
+
+### DATE
+
+`DATE` is used to store date values.
+
+The standard format is:
+
+`YYYY-MM-DD`
+
+**Example:**
+
+`2026-08-29`
+
+**Uses:**
+
+* Date of birth
+* Joining date
+* Appointment date
+* Registration date
+
+---
+
+### TIME
+
+`TIME` is used to store time values.
+
+**Example:**
+
+`10:30:00`
+
+It can be used for:
+
+* Meeting times
+* Login times
+* Appointment times
+
+---
+
+### DATETIME
+
+`DATETIME` is used to store both date and time.
+
+**Example:**
+
+`2026-08-29 10:30:00`
+
+It is useful for:
+
+* Transactions
+* Login records
+* Order dates
+* System activities
+
+---
+
+### DECIMAL
+
+`DECIMAL` is used to store exact decimal numbers.
+
+It is commonly used for financial and monetary values.
+
+**Examples:**
+
+* Salary
+* Product price
+* Fees
+* Bank transactions
+
+For example:
+
+`DECIMAL(10,2)`
+
+Here:
+
+* `10` represents the total number of digits.
+* `2` represents the number of digits after the decimal point.
+
+---
+
+### FLOAT
+
+`FLOAT` is used to store approximate decimal numbers.
+
+It is useful when exact precision is not always required.
+
+**Examples:**
+
+* Scientific calculations
+* Measurements
+* Approximate numerical values
+
+---
+
+### BOOLEAN
+
+`BOOLEAN` is used to represent logical values such as:
+
+* TRUE
+* FALSE
+
+It can be used for:
+
+* Active/Inactive status
+* Yes/No conditions
+* User verification status
+
+---
+
+# 2. ALTER TABLE
+
+`ALTER TABLE` is a DDL (Data Definition Language) command used to modify the structure of an existing table.
+
+It allows us to make changes to the table without creating a completely new table.
+
+## Uses of ALTER TABLE
+
+`ALTER TABLE` can be used to:
+
+* Add a new column
+* Modify an existing column
+* Rename a column
+* Delete a column
+
+---
+
+## Adding a Column
+
+A new column can be added to an existing table using `ALTER TABLE`.
+
+**Syntax:**
+
+`ALTER TABLE table_name ADD column_name datatype;`
+
+This is useful when additional information needs to be stored in an existing table.
+
+---
+
+## Modifying a Column
+
+An existing column's data type or definition can be modified using `ALTER TABLE`.
+
+This is useful when the existing column definition needs to be changed.
+
+---
+
+## Renaming a Column
+
+A column can be renamed when its existing name is not suitable or needs to be made clearer.
+
+---
+
+## Dropping a Column
+
+An unwanted column can be removed from an existing table using `ALTER TABLE`.
+
+Once a column is dropped, the data stored in that column is also removed.
+
+---
+
+# 3. DROP TABLE
+
+`DROP TABLE` is a DDL command used to completely remove a table from a database.
+
+When a table is dropped, both its structure and data are removed.
+
+## Effects of DROP TABLE
+
+When `DROP TABLE` is executed:
+
+* The table is deleted.
+* All records are deleted.
+* The table structure is deleted.
+* The table can no longer be accessed.
+
+## Syntax
+
+`DROP TABLE table_name;`
+
+## Important Point
+
+`DROP TABLE` should be used carefully because it removes the complete table and its data.
+
+---
+
+# 4. TRUNCATE TABLE
+
+`TRUNCATE TABLE` is a DDL command used to remove all records from an existing table.
+
+Unlike `DROP TABLE`, the table itself is not removed.
+
+After using `TRUNCATE`, the table structure remains available and new records can be inserted.
+
+## Effects of TRUNCATE TABLE
+
+When a table is truncated:
+
+* All rows are removed.
+* The table structure remains.
+* Columns remain.
+* The table can still be used.
+* New records can be inserted.
+
+## Syntax
+
+`TRUNCATE TABLE table_name;`
+
+## Important Point
+
+`TRUNCATE TABLE` removes all records at once and does not use a `WHERE` condition to remove selected rows.
+
+---
+
+# 5. DELETE vs TRUNCATE vs DROP
+
+These three commands are used for removing data, but they work differently.
+
+| Feature                     | DELETE | TRUNCATE | DROP |
+| --------------------------- | ------ | -------- | ---- |
+| Removes data                | Yes    | Yes      | Yes  |
+| Removes selected rows       | Yes    | No       | No   |
+| Removes all rows            | Yes    | Yes      | Yes  |
+| Table structure remains     | Yes    | Yes      | No   |
+| WHERE condition             | Yes    | No       | No   |
+| Table remains after command | Yes    | Yes      | No   |
+| Type                        | DML    | DDL      | DDL  |
+
+---
+
+# 🔍 DELETE
+
+`DELETE` is used to remove records from a table.
+
+It can remove specific records by using a `WHERE` condition.
+
+It can also remove all records if no `WHERE` condition is provided.
+
+---
+
+# 🔍 TRUNCATE
+
+`TRUNCATE` removes all records from a table while keeping the table structure.
+
+It is useful when we want to empty a table but continue using the same table.
+
+---
+
+# 🔍 DROP
+
+`DROP` completely removes the table along with its structure and data.
+
+It should be used carefully because the table itself no longer exists after the command.
+
+---
+
+# ⭐ Key Differences
+
+### DELETE
+
+Used when we want to remove specific rows or records.
+
+### TRUNCATE
+
+Used when we want to remove all records but keep the table.
+
+### DROP
+
+Used when we want to completely remove the table.
+
+---
+
+# 📚 Key Takeaways
+
+* SQL Data Types define what type of data can be stored in a column.
+* `INT` is used for whole numbers.
+* `VARCHAR` is used for variable-length text.
+* `DATE` is used for dates.
+* `DECIMAL` is used for exact decimal values.
+* `ALTER TABLE` is used to modify an existing table structure.
+* `DROP TABLE` completely removes a table.
+* `TRUNCATE TABLE` removes all records but keeps the table structure.
+* `DELETE` removes records and can use a `WHERE` condition.
+* `TRUNCATE` removes all records without a `WHERE` condition.
+* `DROP` removes the complete table.
+ Day 4 Summary
+
+Today I learned about SQL Data Types and basic table management operations.
+
+### Topics Completed:
+
+✅ Data Types in SQL
+✅ INT
+✅ VARCHAR
+✅ CHAR
+✅ DATE
+✅ TIME
+✅ DATETIME
+✅ DECIMAL
+✅ FLOAT
+✅ BOOLEAN
+✅ ALTER TABLE
+✅ DROP TABLE
+✅ TRUNCATE TABLE
+✅ DELETE vs TRUNCATE vs DROP
+
