@@ -1,0 +1,337 @@
+ MYSQL – DAY 5
+
+## INSERT AND UPDATE OPERATIONS
+
+---
+
+## 1. INSERT with IDENTITY (AUTO_INCREMENT)
+
+### Definition:
+
+`AUTO_INCREMENT` is used to automatically generate a unique numeric value for a column whenever a new record is inserted into a table.
+
+It is commonly used with the `PRIMARY KEY`.
+
+### Syntax:
+
+```sql
+CREATE TABLE student (
+    stuid INT AUTO_INCREMENT PRIMARY KEY,
+    stu_name VARCHAR(50),
+    age INT,
+    dept VARCHAR(30)
+);
+```
+
+### Example:
+
+```sql
+INSERT INTO student (stu_name, age, dept)
+VALUES ('Bunny', 22, 'AIML');
+```
+
+Here, we don't provide the `stuid`.
+
+MySQL automatically generates the ID.
+
+### Output:
+
+```text
+stuid    stu_name    age    dept
+1        Bunny       22     AIML
+```
+
+Insert another record:
+
+```sql
+INSERT INTO student (stu_name, age, dept)
+VALUES ('Ravi', 21, 'CSE');
+```
+
+### Output:
+
+```text
+stuid    stu_name    age    dept
+1        Bunny       22     AIML
+2        Ravi        21     CSE
+```
+
+### Important Points:
+
+* `AUTO_INCREMENT` automatically generates numbers.
+* It is generally used with `PRIMARY KEY`.
+* We don't need to manually enter the ID.
+* Each new record gets the next available value.
+
+---
+
+# 2. INSERT: Creating a Table from Another Table
+
+### Definition:
+
+We can create a new table using the structure and data of an existing table by using `CREATE TABLE AS SELECT`.
+
+### Syntax:
+
+```sql
+CREATE TABLE new_table AS
+SELECT * FROM old_table;
+```
+
+### Example:
+
+```sql
+CREATE TABLE student_backup AS
+SELECT * FROM student;
+```
+
+This creates a new table called `student_backup` and copies the data from the `student` table.
+
+### To check the data:
+
+```sql
+SELECT * FROM student_backup;
+```
+
+### Creating a table with selected columns:
+
+```sql
+CREATE TABLE student_details AS
+SELECT stuid, stu_name, dept
+FROM student;
+```
+
+Only the selected columns are copied.
+
+### Important Points:
+
+* `CREATE TABLE AS SELECT` creates a new table.
+* It can copy data from an existing table.
+* We can select all columns or specific columns.
+* The original table is not changed.
+
+---
+
+# 3. INSERT: Rows from One Table to Another
+
+### Definition:
+
+`INSERT INTO SELECT` is used to copy rows from one existing table into another existing table.
+
+### Syntax:
+
+```sql
+INSERT INTO table2 (column1, column2, column3)
+SELECT column1, column2, column3
+FROM table1;
+```
+
+### Example:
+
+Create the destination table:
+
+```sql
+CREATE TABLE student_backup (
+    stuid INT,
+    stu_name VARCHAR(50),
+    age INT,
+    dept VARCHAR(30)
+);
+```
+
+Copy rows from `student` to `student_backup`:
+
+```sql
+INSERT INTO student_backup (stuid, stu_name, age, dept)
+SELECT stuid, stu_name, age, dept
+FROM student;
+```
+
+### Check the data:
+
+```sql
+SELECT * FROM student_backup;
+```
+
+### Copy specific rows:
+
+For example, copy only AIML students:
+
+```sql
+INSERT INTO student_backup (stuid, stu_name, age, dept)
+SELECT stuid, stu_name, age, dept
+FROM student
+WHERE dept = 'AIML';
+```
+
+### Important Points:
+
+* `INSERT INTO SELECT` copies data between existing tables.
+* The destination table must already exist.
+* `WHERE` can be used to copy specific rows.
+* The original table is not affected.
+
+---
+
+# 4. UPDATE with Computed Columns
+
+### Definition:
+
+A computed value is a value calculated using an existing column and an arithmetic expression.
+
+`UPDATE` is used to modify existing records.
+
+### Syntax:
+
+```sql
+UPDATE table_name
+SET column_name = expression
+WHERE condition;
+```
+
+### Example 1: Increase Marks
+
+Suppose the table contains:
+
+```text
+stu_name    marks
+Bunny       80
+Ravi        70
+Sita        90
+```
+
+Increase everyone's marks by 5:
+
+```sql
+UPDATE student
+SET marks = marks + 5;
+```
+
+### Result:
+
+```text
+stu_name    marks
+Bunny       85
+Ravi        75
+Sita        95
+```
+
+### Example 2: Increase Marks by 10%
+
+```sql
+UPDATE student
+SET marks = marks * 1.10;
+```
+
+Example:
+
+```text
+80 → 88
+70 → 77
+90 → 99
+```
+
+### Example 3: Update Specific Rows
+
+Increase marks only for AIML students:
+
+```sql
+UPDATE student
+SET marks = marks + 5
+WHERE dept = 'AIML';
+```
+
+### Important Points:
+
+* `UPDATE` modifies existing data.
+* `SET` specifies the new value.
+* Computed values can be created using arithmetic operators.
+* `WHERE` is used to update specific rows.
+* Without `WHERE`, all rows may be updated.
+
+---
+
+# DIFFERENCE BETWEEN CREATE TABLE AS SELECT AND INSERT INTO SELECT
+
+### CREATE TABLE AS SELECT:
+
+```sql
+CREATE TABLE backup AS
+SELECT * FROM student;
+```
+
+* Creates a new table.
+* Copies selected data.
+* Destination table does not need to exist.
+
+### INSERT INTO SELECT:
+
+```sql
+INSERT INTO backup
+SELECT * FROM student;
+```
+
+* Inserts data into an existing table.
+* Destination table must already exist.
+* Can be used to copy selected rows.
+
+---
+
+# IMPORTANT COMMANDS
+
+```text
+AUTO_INCREMENT
+→ Automatically generates ID
+
+INSERT INTO
+→ Adds new records
+
+CREATE TABLE AS SELECT
+→ Creates a new table from another table
+
+INSERT INTO SELECT
+→ Copies rows from one table to another
+
+UPDATE
+→ Modifies existing records
+
+SET
+→ Assigns a new value
+
+WHERE
+→ Selects specific records
+
+SELECT
+→ Displays records
+```
+
+---
+
+# DAY 5 SUMMARY
+
+1. INSERT with AUTO_INCREMENT
+2. Creating a Table from Another Table
+3. Inserting Rows from One Table to Another
+4. UPDATE with Computed Values
+5. Difference between CREATE TABLE AS SELECT and INSERT INTO SELECT
+6. Using WHERE with UPDATE
+
+### Key Concept:
+
+```text
+AUTO_INCREMENT
+       ↓
+Automatically Generate ID
+
+CREATE TABLE AS SELECT
+       ↓
+Create New Table + Copy Data
+
+INSERT INTO SELECT
+       ↓
+Copy Rows to Existing Table
+
+UPDATE + Computation
+       ↓
+Modify Data Using Calculation
+```
