@@ -1,0 +1,789 @@
+DAY 8 - MySQL  – Operators, Predicates & Aliases
+
+Today I learned about **MySQL operators, predicates, NULL handling, and column aliases**. These are very important for filtering, comparing, and working with data in SQL queries.
+
+---
+
+## 1. Arithmetic Operators
+
+Arithmetic operators are used to perform mathematical calculations on numeric values.
+
+### Common Arithmetic Operators
+
+| Operator | Meaning             | Example  |
+| -------- | ------------------- | -------- |
+| `+`      | Addition            | `10 + 5` |
+| `-`      | Subtraction         | `10 - 5` |
+| `*`      | Multiplication      | `10 * 5` |
+| `/`      | Division            | `10 / 5` |
+| `%`      | Modulus (remainder) | `10 % 3` |
+
+### Example
+
+```sql
+SELECT 10 + 5 AS addition;
+SELECT 10 - 5 AS subtraction;
+SELECT 10 * 5 AS multiplication;
+SELECT 10 / 5 AS division;
+SELECT 10 % 3 AS remainder;
+```
+
+### Real-Time Example
+
+Suppose a product costs ₹500 and the quantity is 3:
+
+```sql
+SELECT 500 * 3 AS total_price;
+```
+
+Output:
+
+```text
+total_price
+-----------
+1500
+```
+
+---
+
+# 2. Relational Operators
+
+Relational operators are used to **compare two values**.
+
+### Common Relational Operators
+
+| Operator | Meaning                  |
+| -------- | ------------------------ |
+| `=`      | Equal to                 |
+| `>`      | Greater than             |
+| `<`      | Less than                |
+| `>=`     | Greater than or equal to |
+| `<=`     | Less than or equal to    |
+| `<>`     | Not equal to             |
+| `!=`     | Not equal to             |
+
+### Example Table
+
+```sql
+CREATE TABLE students (
+    id INT,
+    name VARCHAR(50),
+    age INT,
+    marks INT
+);
+```
+
+Insert data:
+
+```sql
+INSERT INTO students VALUES
+(1, 'Bunny', 22, 85),
+(2, 'Rahul', 21, 65),
+(3, 'Anu', 23, 90);
+```
+
+Find students whose marks are greater than 70:
+
+```sql
+SELECT * FROM students
+WHERE marks > 70;
+```
+
+Find students whose age is 22:
+
+```sql
+SELECT * FROM students
+WHERE age = 22;
+```
+
+---
+
+# 3. Logical Operators
+
+Logical operators are used to combine multiple conditions.
+
+### Main Logical Operators
+
+| Operator | Meaning                             |
+| -------- | ----------------------------------- |
+| `AND`    | All conditions must be true         |
+| `OR`     | At least one condition must be true |
+| `NOT`    | Reverses the condition              |
+
+### AND Example
+
+Find students whose age is greater than 20 AND marks are greater than 70:
+
+```sql
+SELECT * FROM students
+WHERE age > 20 AND marks > 70;
+```
+
+### OR Example
+
+```sql
+SELECT * FROM students
+WHERE age = 21 OR marks > 80;
+```
+
+### NOT Example
+
+```sql
+SELECT * FROM students
+WHERE NOT age = 22;
+```
+
+### Real-Time Use
+
+Logical operators are useful when we need to apply **multiple conditions** while retrieving data.
+
+---
+
+# 4. Bitwise Operators
+
+Bitwise operators work on the **binary representation of numbers**.
+
+### Common Bitwise Operators
+
+| Operator | Meaning     |            |
+| -------- | ----------- | ---------- |
+| `&`      | Bitwise AND |            |
+| `        | `           | Bitwise OR |
+| `^`      | Bitwise XOR |            |
+| `<<`     | Left shift  |            |
+| `>>`     | Right shift |            |
+
+### Example
+
+```sql
+SELECT 5 & 3;
+```
+
+Binary representation:
+
+```text
+5 = 101
+3 = 011
+---------
+    001
+```
+
+Result:
+
+```text
+1
+```
+
+Another example:
+
+```sql
+SELECT 5 | 3;
+```
+
+Result:
+
+```text
+7
+```
+
+### Real-Time Use
+
+Bitwise operators are mainly used in:
+
+* Permission systems
+* Flags
+* Low-level programming
+* Binary data processing
+
+---
+
+# 5. Assignment Operators
+
+Assignment operators are used to assign values to variables or update values.
+
+The commonly used assignment operator is:
+
+```sql
+=
+```
+
+### Example
+
+```sql
+SET @salary = 30000;
+```
+
+Check the value:
+
+```sql
+SELECT @salary;
+```
+
+Output:
+
+```text
+30000
+```
+
+### UPDATE Example
+
+Suppose a student's marks need to be increased:
+
+```sql
+UPDATE students
+SET marks = marks + 5
+WHERE id = 1;
+```
+
+Here:
+
+```text
+marks = marks + 5
+```
+
+means the existing marks are increased by 5.
+
+---
+
+# 6. Special Operators – EXISTS
+
+`EXISTS` is used to check whether a **subquery returns at least one row**.
+
+If the subquery returns a row, `EXISTS` returns TRUE.
+
+### Syntax
+
+```sql
+SELECT column_name
+FROM table_name
+WHERE EXISTS (
+    SELECT column_name
+    FROM another_table
+    WHERE condition
+);
+```
+
+### Example
+
+Suppose we have:
+
+```sql
+CREATE TABLE departments (
+    dept_id INT,
+    dept_name VARCHAR(50)
+);
+```
+
+And:
+
+```sql
+CREATE TABLE employees (
+    emp_id INT,
+    emp_name VARCHAR(50),
+    dept_id INT
+);
+```
+
+Find departments that have at least one employee:
+
+```sql
+SELECT *
+FROM departments d
+WHERE EXISTS (
+    SELECT *
+    FROM employees e
+    WHERE e.dept_id = d.dept_id
+);
+```
+
+### Simple Meaning
+
+```text
+EXISTS = "Does at least one matching record exist?"
+```
+
+---
+
+# 7. BETWEEN
+
+`BETWEEN` is used to check whether a value exists within a specified range.
+
+### Syntax
+
+```sql
+SELECT *
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
+```
+
+### Example
+
+Find students whose marks are between 60 and 80:
+
+```sql
+SELECT * FROM students
+WHERE marks BETWEEN 60 AND 80;
+```
+
+`BETWEEN` includes both boundary values.
+
+So:
+
+```sql
+BETWEEN 60 AND 80
+```
+
+means:
+
+```text
+60 <= marks <= 80
+```
+
+### NOT BETWEEN
+
+```sql
+SELECT * FROM students
+WHERE marks NOT BETWEEN 60 AND 80;
+```
+
+---
+
+# 8. IN Operator
+
+The `IN` operator is used when we want to compare a column with **multiple possible values**.
+
+### Without IN
+
+```sql
+SELECT * FROM students
+WHERE age = 21 OR age = 22 OR age = 23;
+```
+
+### Using IN
+
+```sql
+SELECT * FROM students
+WHERE age IN (21, 22, 23);
+```
+
+Both queries can produce the same matching rows.
+
+### NOT IN
+
+```sql
+SELECT * FROM students
+WHERE age NOT IN (21, 22);
+```
+
+### Real-Time Example
+
+Find employees from specific departments:
+
+```sql
+SELECT * FROM employees
+WHERE dept_id IN (1, 2, 3);
+```
+
+---
+
+# 9. LIKE Operator
+
+`LIKE` is used for **pattern matching** in text data.
+
+It is commonly used with:
+
+```sql
+%
+_
+```
+
+### `%` Wildcard
+
+`%` represents zero or more characters.
+
+Find names starting with `B`:
+
+```sql
+SELECT * FROM students
+WHERE name LIKE 'B%';
+```
+
+Examples that can match:
+
+```text
+Bunny
+Bharat
+Bhanu
+```
+
+### Names Ending With `a`
+
+```sql
+SELECT * FROM students
+WHERE name LIKE '%a';
+```
+
+### Names Containing `un`
+
+```sql
+SELECT * FROM students
+WHERE name LIKE '%un%';
+```
+
+### `_` Wildcard
+
+`_` represents exactly one character.
+
+```sql
+SELECT * FROM students
+WHERE name LIKE 'A_u';
+```
+
+This can match a three-character name where:
+
+```text
+A + one character + u
+```
+
+### NOT LIKE
+
+```sql
+SELECT * FROM students
+WHERE name NOT LIKE 'B%';
+```
+
+---
+
+# 10. IS NULL Function / IS NULL Operator
+
+In MySQL, `NULL` means that a value is **missing, unknown, or not available**.
+
+Important:
+
+```text
+NULL is NOT the same as 0
+NULL is NOT the same as ''
+NULL is NOT the same as 'NULL'
+```
+
+### Example
+
+Create a table:
+
+```sql
+CREATE TABLE employees (
+    id INT,
+    name VARCHAR(50),
+    phone VARCHAR(15)
+);
+```
+
+Insert data:
+
+```sql
+INSERT INTO employees VALUES
+(1, 'Bunny', '9876543210'),
+(2, 'Rahul', NULL),
+(3, 'Anu', '9123456780');
+```
+
+Find employees whose phone number is NULL:
+
+```sql
+SELECT * FROM employees
+WHERE phone IS NULL;
+```
+
+### IS NOT NULL
+
+Find employees who have a phone number:
+
+```sql
+SELECT * FROM employees
+WHERE phone IS NOT NULL;
+```
+
+### Important
+
+Do NOT use:
+
+```sql
+WHERE phone = NULL;
+```
+
+Use:
+
+```sql
+WHERE phone IS NULL;
+```
+
+Similarly:
+
+```sql
+WHERE phone IS NOT NULL;
+```
+
+---
+
+# 11. Column Aliases – AS
+
+An alias gives a **temporary name** to a column or table in the query result.
+
+The `AS` keyword is used to create an alias.
+
+### Example
+
+```sql
+SELECT name AS student_name
+FROM students;
+```
+
+Instead of displaying:
+
+```text
+name
+----
+Bunny
+Rahul
+Anu
+```
+
+the result column can display:
+
+```text
+student_name
+------------
+Bunny
+Rahul
+Anu
+```
+
+### Alias for Calculated Column
+
+```sql
+SELECT marks + 5 AS updated_marks
+FROM students;
+```
+
+### Alias for Multiple Columns
+
+```sql
+SELECT
+    name AS student_name,
+    age AS student_age,
+    marks AS student_marks
+FROM students;
+```
+
+### Table Alias
+
+Aliases can also be given to tables:
+
+```sql
+SELECT s.name, s.marks
+FROM students AS s;
+```
+
+Here:
+
+```text
+students = actual table name
+s = temporary table alias
+```
+
+---
+
+# 12. Predicates – BETWEEN
+
+A predicate is a condition that evaluates to **TRUE, FALSE, or UNKNOWN**.
+
+`BETWEEN` can be used as a predicate to filter data.
+
+### Example
+
+```sql
+SELECT * FROM students
+WHERE marks BETWEEN 70 AND 90;
+```
+
+This returns students whose marks are within the specified range.
+
+### Important
+
+`BETWEEN` is inclusive:
+
+```text
+70 <= marks <= 90
+```
+
+---
+
+# 13. Predicates – IN
+
+`IN` is also used as a predicate.
+
+It checks whether a value matches any value from a specified list.
+
+### Example
+
+```sql
+SELECT * FROM students
+WHERE age IN (21, 22, 23);
+```
+
+This means:
+
+```text
+age = 21
+OR
+age = 22
+OR
+age = 23
+```
+
+### NOT IN
+
+```sql
+SELECT * FROM students
+WHERE age NOT IN (21, 22);
+```
+
+---
+
+# 14. Predicates – LIKE
+
+`LIKE` is a predicate used for pattern matching.
+
+### Starts With
+
+```sql
+SELECT * FROM students
+WHERE name LIKE 'B%';
+```
+
+### Ends With
+
+```sql
+SELECT * FROM students
+WHERE name LIKE '%n';
+```
+
+### Contains
+
+```sql
+SELECT * FROM students
+WHERE name LIKE '%un%';
+```
+
+### One Character
+
+```sql
+SELECT * FROM students
+WHERE name LIKE 'B___y';
+```
+
+Here each `_` represents exactly one character.
+
+---
+
+# 15. Predicate – IS NULL
+
+`IS NULL` checks whether a column contains a NULL value.
+
+### Example
+
+```sql
+SELECT * FROM employees
+WHERE phone IS NULL;
+```
+
+This returns employees whose phone number is missing.
+
+### IS NOT NULL
+
+```sql
+SELECT * FROM employees
+WHERE phone IS NOT NULL;
+```
+
+This returns employees whose phone number is available.
+
+---
+
+# Quick Revision
+
+| Topic      | Purpose                   | Example                   |
+| ---------- | ------------------------- | ------------------------- |
+| Arithmetic | Mathematical calculations | `salary + 5000`           |
+| Relational | Compare values            | `marks > 70`              |
+| Logical    | Combine conditions        | `age > 20 AND marks > 70` |
+| Bitwise    | Work with binary values   | `5 & 3`                   |
+| Assignment | Assign/update values      | `SET @x = 10`             |
+| EXISTS     | Check if rows exist       | `WHERE EXISTS (...)`      |
+| BETWEEN    | Check a range             | `marks BETWEEN 60 AND 90` |
+| IN         | Match multiple values     | `age IN (20,21,22)`       |
+| LIKE       | Pattern matching          | `name LIKE 'B%'`          |
+| IS NULL    | Find missing values       | `phone IS NULL`           |
+| AS         | Give temporary alias      | `name AS student_name`    |
+
+---
+
+# Key Points to Remember
+
+1. `BETWEEN` includes both starting and ending values.
+2. `IN` is useful when checking multiple values.
+3. `%` in `LIKE` means zero or more characters.
+4. `_` in `LIKE` means exactly one character.
+5. Use `IS NULL` to check for NULL values.
+6. Use `IS NOT NULL` to find non-NULL values.
+7. Never use `= NULL` to check for NULL.
+8. `AS` creates a temporary column or table alias.
+9. `EXISTS` checks whether a subquery returns at least one row.
+10. Logical operators such as `AND`, `OR`, and `NOT` help combine conditions.
+
+---
+
+# Practice Queries
+
+```sql
+-- Arithmetic
+SELECT 100 + 50 AS total;
+
+-- Relational
+SELECT * FROM students
+WHERE marks > 70;
+
+-- Logical
+SELECT * FROM students
+WHERE age > 20 AND marks > 70;
+
+-- BETWEEN
+SELECT * FROM students
+WHERE marks BETWEEN 60 AND 90;
+
+-- IN
+SELECT * FROM students
+WHERE age IN (21, 22, 23);
+
+-- LIKE
+SELECT * FROM students
+WHERE name LIKE 'B%';
+
+-- IS NULL
+SELECT * FROM employees
+WHERE phone IS NULL;
+
+-- IS NOT NULL
+SELECT * FROM employees
+WHERE phone IS NOT NULL;
+
+-- Column Alias
+SELECT name AS student_name
+FROM students;
+```
+
+## Conclusion
+
+Today I learned how MySQL operators and predicates are used to **calculate values, compare data, combine conditions, search for patterns, check ranges, handle NULL values, and make query results easier to understand using aliases**.
+
+These concepts are very useful for writing practical SQL queries and are commonly used in real-world applications such as **employee management systems, student databases, banking systems, e-commerce applications, and data analysis**.
