@@ -1,0 +1,477 @@
+Day7 – MySQL Notes
+
+## Topics Covered
+
+1. ALTER: ADD Column
+2. MODIFY Column
+3. DELETE with WHERE
+4. TRUNCATE vs DELETE
+
+---
+
+# 1. ALTER: ADD Column
+
+The `ALTER TABLE` command is used when we want to **change the structure of an existing table**.
+
+If we already created a table and later realize that we need one more column, we can use `ADD`.
+
+### Syntax
+
+```sql
+ALTER TABLE table_name
+ADD column_name datatype;
+```
+
+### Example
+
+Let's create a student table:
+
+```sql
+CREATE TABLE student (
+    id INT,
+    name VARCHAR(50),
+    age INT
+);
+```
+
+Now suppose we want to add a `department` column.
+
+```sql
+ALTER TABLE student
+ADD department VARCHAR(50);
+```
+
+Check the table:
+
+```sql
+DESC student;
+```
+
+Now the table contains:
+
+```text
+id
+name
+age
+department
+```
+
+### Adding Multiple Columns
+
+We can also add more than one column.
+
+```sql
+ALTER TABLE student
+ADD email VARCHAR(100),
+ADD phone VARCHAR(15);
+```
+
+### Real-Time Example
+
+Imagine a college database initially stores:
+
+```text
+Student ID
+Student Name
+Age
+```
+
+Later, the college wants to store the student's department.
+
+Instead of creating a new table, we can simply add the column:
+
+```sql
+ALTER TABLE student
+ADD department VARCHAR(50);
+```
+
+**Key Point:**
+
+`ADD` is used to add a new column to an existing table.
+
+---
+
+# 2. MODIFY Column
+
+The `MODIFY` command is used to **change the datatype or size of an existing column**.
+
+### Syntax
+
+```sql
+ALTER TABLE table_name
+MODIFY column_name new_datatype;
+```
+
+### Example
+
+Suppose we created:
+
+```sql
+CREATE TABLE student (
+    id INT,
+    name VARCHAR(20)
+);
+```
+
+The `name` column can store only 20 characters.
+
+If we want to increase it to 50 characters:
+
+```sql
+ALTER TABLE student
+MODIFY name VARCHAR(50);
+```
+
+Check the changes:
+
+```sql
+DESC student;
+```
+
+The `name` column will now be:
+
+```text
+VARCHAR(50)
+```
+
+### Another Example
+
+Suppose:
+
+```sql
+age INT
+```
+
+We can modify it to:
+
+```sql
+ALTER TABLE student
+MODIFY age TINYINT;
+```
+
+### Important
+
+`MODIFY` changes the **definition/structure of a column**.
+
+It does not normally change the existing column name.
+
+If we want to change the column name as well, MySQL provides `CHANGE`.
+
+### Real-Time Example
+
+Suppose an employee table has:
+
+```text
+employee_name VARCHAR(20)
+```
+
+Later, the company realizes that employee names can be longer.
+
+We can increase the size:
+
+```sql
+ALTER TABLE employee
+MODIFY employee_name VARCHAR(100);
+```
+
+**Key Point:**
+
+`MODIFY` is mainly used to change a column's datatype or size.
+
+---
+
+# 3. DELETE with WHERE
+
+The `DELETE` command is used to **remove rows from a table**.
+
+The `WHERE` condition tells MySQL **which particular rows should be deleted**.
+
+### Syntax
+
+```sql
+DELETE FROM table_name
+WHERE condition;
+```
+
+### Example
+
+Suppose our student table contains:
+
+```text
+id | name  | age
+---|-------|----
+1  | Ravi  | 20
+2  | Arun  | 21
+3  | Priya | 19
+4  | John  | 22
+```
+
+If we want to delete the student whose ID is `3`:
+
+```sql
+DELETE FROM student
+WHERE id = 3;
+```
+
+Now the table becomes:
+
+```text
+id | name | age
+---|------|----
+1  | Ravi | 20
+2  | Arun | 21
+4  | John | 22
+```
+
+Only the row where `id = 3` was deleted.
+
+### DELETE Multiple Rows
+
+We can delete multiple rows using a condition.
+
+For example:
+
+```sql
+DELETE FROM student
+WHERE age < 20;
+```
+
+This deletes all students whose age is less than 20.
+
+### Very Important: DELETE Without WHERE
+
+Be careful with:
+
+```sql
+DELETE FROM student;
+```
+
+There is no `WHERE` condition, so **all rows will be deleted**.
+
+The table structure will still exist, but the data will be removed.
+
+### Real-Time Example
+
+Imagine an employee table:
+
+```text
+id | name  | department
+---|-------|------------
+1  | Ravi  | IT
+2  | Arun  | HR
+3  | Priya | IT
+```
+
+If Ravi leaves the company:
+
+```sql
+DELETE FROM employee
+WHERE id = 1;
+```
+
+Only Ravi's record is removed.
+
+**Key Point:**
+
+Always use `WHERE` carefully when deleting specific records.
+
+---
+
+# 4. TRUNCATE vs DELETE
+
+Both `DELETE` and `TRUNCATE` can remove data from a table, but they are used differently.
+
+## DELETE
+
+`DELETE` removes rows from a table.
+
+```sql
+DELETE FROM student
+WHERE id = 2;
+```
+
+It can remove:
+
+* One row
+* Multiple rows
+* All rows
+
+Example:
+
+```sql
+DELETE FROM student;
+```
+
+---
+
+## TRUNCATE
+
+`TRUNCATE` removes **all rows from a table at once**.
+
+### Syntax
+
+```sql
+TRUNCATE TABLE table_name;
+```
+
+### Example
+
+```sql
+TRUNCATE TABLE student;
+```
+
+All records from the `student` table are removed.
+
+However, the table itself still exists.
+
+We can check the table structure:
+
+```sql
+DESC student;
+```
+
+The columns will still be there.
+
+---
+
+# DELETE vs TRUNCATE
+
+| Feature                 | DELETE             | TRUNCATE              |
+| ----------------------- | ------------------ | --------------------- |
+| Removes data            | Yes                | Yes                   |
+| Removes specific rows   | Yes                | No                    |
+| Uses WHERE              | Yes                | No                    |
+| Removes all rows        | Yes                | Yes                   |
+| Table structure remains | Yes                | Yes                   |
+| Can use conditions      | Yes                | No                    |
+| Mainly used for         | Selective deletion | Emptying entire table |
+
+---
+
+# Simple Example to Remember
+
+Imagine a classroom with 50 students.
+
+### Delete one student
+
+```sql
+DELETE FROM student
+WHERE id = 10;
+```
+
+Only student `10` is removed.
+
+### Delete students based on a condition
+
+```sql
+DELETE FROM student
+WHERE age < 18;
+```
+
+All students younger than 18 are removed.
+
+### Remove all students
+
+```sql
+TRUNCATE TABLE student;
+```
+
+All student records are removed, but the **student table remains**.
+
+---
+
+# Important Difference in One Line
+
+**DELETE = Remove selected rows (or all rows) using a condition.**
+
+**TRUNCATE = Quickly remove all rows from the table.**
+
+---
+
+# Quick Revision
+
+### ALTER ADD
+
+Used to add a new column.
+
+```sql
+ALTER TABLE student
+ADD email VARCHAR(100);
+```
+
+### MODIFY
+
+Used to change the datatype or size of a column.
+
+```sql
+ALTER TABLE student
+MODIFY name VARCHAR(100);
+```
+
+### DELETE WHERE
+
+Used to delete specific rows.
+
+```sql
+DELETE FROM student
+WHERE id = 5;
+```
+
+### TRUNCATE
+
+Used to remove all rows from a table.
+
+```sql
+TRUNCATE TABLE student;
+```
+
+---
+
+# Practice Questions
+
+### 1. Add a `city` column to the student table.
+
+```sql
+ALTER TABLE student
+ADD city VARCHAR(50);
+```
+
+### 2. Change the `name` column from VARCHAR(50) to VARCHAR(100).
+
+```sql
+ALTER TABLE student
+MODIFY name VARCHAR(100);
+```
+
+### 3. Delete the student whose ID is 10.
+
+```sql
+DELETE FROM student
+WHERE id = 10;
+```
+
+### 4. Delete all students whose age is greater than 25.
+
+```sql
+DELETE FROM student
+WHERE age > 25;
+```
+
+### 5. Remove all records from the student table.
+
+```sql
+TRUNCATE TABLE student;
+```
+
+---
+
+# Summary
+
+Today we learned how to modify and remove data in MySQL.
+
+* `ALTER TABLE ... ADD` → Adds a new column.
+* `ALTER TABLE ... MODIFY` → Changes a column's datatype or size.
+* `DELETE ... WHERE` → Deletes specific rows.
+* `TRUNCATE TABLE` → Removes all rows while keeping the table structure.
+
+These commands are commonly used when managing and maintaining databases in real-world applications.
