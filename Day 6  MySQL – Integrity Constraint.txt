@@ -1,0 +1,826 @@
+Day 6  MySQL – Integrity Constraints
+
+## 1. Integrity Constraints
+
+Integrity constraints are rules applied to a database table to maintain **accuracy, consistency, and validity of data**.
+
+### Types of Integrity Constraints
+
+There are two common approaches:
+
+1. **Procedural Integrity Constraints**
+2. **Declarative Integrity Constraints**
+
+---
+
+# 1. Procedural Integrity Constraints
+
+Procedural integrity constraints maintain data integrity by using **procedures, programs, or application logic**.
+
+In procedural methods, the programmer writes logic to check whether the data is valid before inserting or updating it.
+
+### Example
+
+Suppose an application should not allow an employee's salary to be negative.
+
+```sql
+IF salary < 0 THEN
+    Reject the data;
+END IF;
+```
+
+The application checks the condition before storing the data.
+
+### Real-Time Example
+
+In an online shopping application:
+
+* Product quantity should not be negative.
+* Order amount should be greater than 0.
+* User age should be valid.
+* Email should follow the required format.
+
+These validations can be handled by application code.
+
+### Disadvantages
+
+* Validation logic may be repeated in different applications.
+* Database itself may not always prevent invalid data.
+* Maintaining application-level validation can become difficult.
+
+---
+
+# 2. Declarative Integrity Constraints
+
+Declarative constraints are rules defined **directly in the database table**.
+
+The database automatically checks these rules when data is inserted or updated.
+
+Common MySQL declarative constraints are:
+
+* NOT NULL
+* UNIQUE
+* DEFAULT
+* CHECK
+* PRIMARY KEY
+* FOREIGN KEY
+
+---
+
+# 2. NOT NULL Constraint
+
+The `NOT NULL` constraint prevents a column from storing `NULL` values.
+
+It means that a value must be provided for that column.
+
+### Syntax
+
+```sql
+CREATE TABLE table_name (
+    column_name datatype NOT NULL
+);
+```
+
+### Example
+
+```sql
+CREATE TABLE student (
+    student_id INT NOT NULL,
+    student_name VARCHAR(50) NOT NULL,
+    age INT
+);
+```
+
+Here:
+
+* `student_id` cannot be NULL.
+* `student_name` cannot be NULL.
+* `age` can contain NULL.
+
+### Valid Insert
+
+```sql
+INSERT INTO student
+VALUES (101, 'Ravi', 21);
+```
+
+### Invalid Insert
+
+```sql
+INSERT INTO student
+VALUES (NULL, 'Ravi', 21);
+```
+
+The database rejects the value because `student_id` is `NOT NULL`.
+
+### Real-Time Example
+
+A bank account must have an account holder name.
+
+```sql
+account_holder VARCHAR(100) NOT NULL
+```
+
+An account cannot be created without the holder's name.
+
+---
+
+# 3. UNIQUE Constraint
+
+The `UNIQUE` constraint ensures that values in a column are not duplicated.
+
+### Syntax
+
+```sql
+CREATE TABLE table_name (
+    column_name datatype UNIQUE
+);
+```
+
+### Example
+
+```sql
+CREATE TABLE employee (
+    emp_id INT,
+    email VARCHAR(100) UNIQUE
+);
+```
+
+The same email address cannot be stored for two employees.
+
+### Valid Data
+
+```sql
+INSERT INTO employee
+VALUES (101, 'ravi@gmail.com');
+
+INSERT INTO employee
+VALUES (102, 'kiran@gmail.com');
+```
+
+### Invalid Data
+
+```sql
+INSERT INTO employee
+VALUES (103, 'ravi@gmail.com');
+```
+
+This is rejected because `ravi@gmail.com` already exists.
+
+### Real-Time Example
+
+User registration:
+
+```text
+user_id     email
+101         ravi@gmail.com
+102         kiran@gmail.com
+```
+
+Two users should not have the same email address.
+
+---
+
+# 4. DEFAULT Constraint
+
+The `DEFAULT` constraint automatically provides a value when the user does not specify a value during insertion.
+
+### Syntax
+
+```sql
+CREATE TABLE table_name (
+    column_name datatype DEFAULT value
+);
+```
+
+### Example
+
+```sql
+CREATE TABLE employee (
+    emp_id INT,
+    emp_name VARCHAR(50),
+    department VARCHAR(30) DEFAULT 'IT'
+);
+```
+
+If the department is not provided, MySQL automatically stores `IT`.
+
+### Insert Example
+
+```sql
+INSERT INTO employee (emp_id, emp_name)
+VALUES (101, 'Ravi');
+```
+
+### Check Data
+
+```sql
+SELECT * FROM employee;
+```
+
+Output:
+
+```text
+101    Ravi    IT
+```
+
+### Another Example
+
+```sql
+CREATE TABLE orders (
+    order_id INT,
+    status VARCHAR(20) DEFAULT 'Pending'
+);
+```
+
+If an order is created without specifying a status:
+
+```sql
+INSERT INTO orders (order_id)
+VALUES (1001);
+```
+
+The status will automatically be:
+
+```text
+Pending
+```
+
+### Real-Time Examples
+
+Default values can be used for:
+
+* Order status → `Pending`
+* Country → `India`
+* Account status → `Active`
+* Employee department → `IT`
+
+---
+
+# 5. CHECK Constraint
+
+The `CHECK` constraint is used to restrict values based on a condition.
+
+The database allows the value only when the specified condition is satisfied.
+
+### Syntax
+
+```sql
+CREATE TABLE table_name (
+    column_name datatype CHECK (condition)
+);
+```
+
+### Example
+
+```sql
+CREATE TABLE student (
+    student_id INT,
+    student_name VARCHAR(50),
+    age INT CHECK (age >= 18)
+);
+```
+
+Only students whose age is 18 or above can be inserted.
+
+### Valid Insert
+
+```sql
+INSERT INTO student
+VALUES (101, 'Ravi', 21);
+```
+
+### Invalid Insert
+
+```sql
+INSERT INTO student
+VALUES (102, 'Kiran', 15);
+```
+
+The value is rejected because:
+
+```text
+15 >= 18
+```
+
+is false.
+
+### Another Example
+
+```sql
+CREATE TABLE product (
+    product_id INT,
+    product_name VARCHAR(50),
+    price DECIMAL(10,2) CHECK (price > 0)
+);
+```
+
+The product price must be greater than 0.
+
+### Real-Time Examples
+
+```text
+Age >= 18
+Salary > 0
+Price > 0
+Quantity >= 0
+Marks BETWEEN 0 AND 100
+```
+
+---
+
+# 6. PRIMARY KEY Constraint
+
+A `PRIMARY KEY` uniquely identifies every row in a table.
+
+A primary key has two important properties:
+
+1. It cannot contain `NULL`.
+2. It cannot contain duplicate values.
+
+### Syntax
+
+```sql
+CREATE TABLE table_name (
+    column_name datatype PRIMARY KEY
+);
+```
+
+### Example
+
+```sql
+CREATE TABLE student (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(50),
+    age INT
+);
+```
+
+Here, `student_id` uniquely identifies each student.
+
+### Valid Data
+
+```sql
+INSERT INTO student
+VALUES (101, 'Ravi', 21);
+
+INSERT INTO student
+VALUES (102, 'Kiran', 22);
+```
+
+### Invalid Duplicate
+
+```sql
+INSERT INTO student
+VALUES (101, 'Arun', 23);
+```
+
+This is rejected because `101` already exists.
+
+### Invalid NULL
+
+```sql
+INSERT INTO student
+VALUES (NULL, 'Arun', 23);
+```
+
+This is also rejected.
+
+### Real-Time Example
+
+In a college database:
+
+```text
+student_id = 101
+```
+
+can uniquely identify one student.
+
+### AUTO_INCREMENT with PRIMARY KEY
+
+A common combination is:
+
+```sql
+CREATE TABLE student (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_name VARCHAR(50),
+    age INT
+);
+```
+
+Now MySQL automatically generates the student ID.
+
+Example:
+
+```sql
+INSERT INTO student (student_name, age)
+VALUES ('Ravi', 21);
+
+INSERT INTO student (student_name, age)
+VALUES ('Kiran', 22);
+```
+
+The IDs can automatically become:
+
+```text
+1    Ravi     21
+2    Kiran    22
+```
+
+---
+
+# 7. FOREIGN KEY / Referential Integrity
+
+A `FOREIGN KEY` creates a relationship between two tables.
+
+It is used to maintain **referential integrity**.
+
+The foreign key in one table refers to the primary key of another table.
+
+### Parent Table
+
+```sql
+CREATE TABLE department (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50)
+);
+```
+
+Insert data:
+
+```sql
+INSERT INTO department
+VALUES (1, 'IT');
+
+INSERT INTO department
+VALUES (2, 'HR');
+```
+
+### Child Table
+
+```sql
+CREATE TABLE employee (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    dept_id INT,
+    FOREIGN KEY (dept_id)
+    REFERENCES department(dept_id)
+);
+```
+
+Here:
+
+```text
+department
+    |
+    | dept_id
+    ↓
+employee
+```
+
+The `dept_id` in the employee table is a foreign key.
+
+---
+
+## Valid Foreign Key Data
+
+```sql
+INSERT INTO employee
+VALUES (101, 'Ravi', 1);
+```
+
+This is valid because department `1` exists.
+
+---
+
+## Invalid Foreign Key Data
+
+```sql
+INSERT INTO employee
+VALUES (102, 'Kiran', 10);
+```
+
+This is rejected because department `10` does not exist in the parent table.
+
+This prevents an employee from being assigned to a non-existing department.
+
+---
+
+# Referential Integrity
+
+Referential integrity ensures that relationships between tables remain valid.
+
+For example:
+
+```text
+Department Table
+
+dept_id    dept_name
+1          IT
+2          HR
+```
+
+Employee table:
+
+```text
+emp_id    emp_name    dept_id
+101       Ravi        1
+102       Kiran       2
+```
+
+Here:
+
+```text
+Ravi  → IT
+Kiran → HR
+```
+
+The employee's `dept_id` must refer to an existing `dept_id` in the department table.
+
+---
+
+# ON DELETE
+
+A foreign key can define what happens when a parent record is deleted.
+
+### CASCADE
+
+```sql
+FOREIGN KEY (dept_id)
+REFERENCES department(dept_id)
+ON DELETE CASCADE
+```
+
+If a department is deleted, related employee records can also be deleted.
+
+### SET NULL
+
+```sql
+FOREIGN KEY (dept_id)
+REFERENCES department(dept_id)
+ON DELETE SET NULL
+```
+
+When the parent record is deleted, the foreign key value in the child table becomes `NULL`.
+
+The column must allow NULL for this to work.
+
+### RESTRICT
+
+```sql
+FOREIGN KEY (dept_id)
+REFERENCES department(dept_id)
+ON DELETE RESTRICT
+```
+
+The parent record cannot be deleted while related child records exist.
+
+---
+
+# Complete Example Using Multiple Constraints
+
+```sql
+CREATE TABLE department (
+    dept_id INT PRIMARY KEY AUTO_INCREMENT,
+    dept_name VARCHAR(50) NOT NULL UNIQUE
+);
+```
+
+Insert departments:
+
+```sql
+INSERT INTO department (dept_name)
+VALUES ('IT');
+
+INSERT INTO department (dept_name)
+VALUES ('HR');
+```
+
+Create employee table:
+
+```sql
+CREATE TABLE employee (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    emp_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    salary DECIMAL(10,2) CHECK (salary > 0),
+    status VARCHAR(20) DEFAULT 'Active',
+    dept_id INT,
+    FOREIGN KEY (dept_id)
+    REFERENCES department(dept_id)
+);
+```
+
+Insert employee:
+
+```sql
+INSERT INTO employee
+(emp_name, email, salary, dept_id)
+VALUES
+('Ravi', 'ravi@gmail.com', 30000, 1);
+```
+
+Check the data:
+
+```sql
+SELECT * FROM employee;
+```
+
+---
+
+# Important Difference Between Constraints
+
+| Constraint  | Purpose                               |
+| ----------- | ------------------------------------- |
+| NOT NULL    | Prevents NULL values                  |
+| UNIQUE      | Prevents duplicate values             |
+| DEFAULT     | Provides an automatic value           |
+| CHECK       | Validates a condition                 |
+| PRIMARY KEY | Uniquely identifies each row          |
+| FOREIGN KEY | Creates a relationship between tables |
+
+---
+
+# PRIMARY KEY vs UNIQUE
+
+| PRIMARY KEY                          | UNIQUE                                         |
+| ------------------------------------ | ---------------------------------------------- |
+| Uniquely identifies a row            | Prevents duplicate values                      |
+| Cannot contain NULL                  | Can allow NULL values                          |
+| Only one primary key per table       | Multiple UNIQUE constraints can be defined     |
+| Commonly used for row identification | Commonly used for unique attributes like email |
+
+Example:
+
+```sql
+student_id INT PRIMARY KEY,
+email VARCHAR(100) UNIQUE
+```
+
+---
+
+# PRIMARY KEY vs FOREIGN KEY
+
+| PRIMARY KEY                    | FOREIGN KEY                              |
+| ------------------------------ | ---------------------------------------- |
+| Identifies a row uniquely      | Creates a relationship between tables    |
+| Must be unique                 | Can contain duplicate values             |
+| Cannot be NULL                 | Can be NULL unless NOT NULL is specified |
+| Usually exists in parent table | Usually exists in child table            |
+
+Example:
+
+```text
+Department
+-----------
+dept_id → PRIMARY KEY
+
+Employee
+--------
+dept_id → FOREIGN KEY
+```
+
+---
+
+# Real-Time Example – E-Commerce Database
+
+An e-commerce system can use constraints like this:
+
+```text
+Customer
+---------
+customer_id → PRIMARY KEY
+email       → UNIQUE
+name        → NOT NULL
+
+Product
+---------
+product_id  → PRIMARY KEY
+price       → CHECK(price > 0)
+stock       → CHECK(stock >= 0)
+
+Orders
+---------
+order_id    → PRIMARY KEY
+customer_id → FOREIGN KEY
+status      → DEFAULT 'Pending'
+```
+
+These constraints help prevent invalid data from entering the database.
+
+---
+
+# Summary
+
+Integrity constraints help maintain the quality and consistency of data.
+
+### Procedural Integrity
+
+Validation is handled using:
+
+```text
+Application / Program Logic
+```
+
+### Declarative Integrity
+
+Validation is handled using database constraints:
+
+```text
+NOT NULL
+UNIQUE
+DEFAULT
+CHECK
+PRIMARY KEY
+FOREIGN KEY
+```
+
+### Key Points
+
+* `NOT NULL` → value is required.
+* `UNIQUE` → duplicate values are not allowed.
+* `DEFAULT` → automatically provides a value.
+* `CHECK` → validates a condition.
+* `PRIMARY KEY` → uniquely identifies a row.
+* `FOREIGN KEY` → connects two tables.
+* `REFERENTIAL INTEGRITY` → keeps relationships between tables valid.
+
+---
+
+# Practice Questions
+
+## Basic
+
+1. What are integrity constraints?
+2. What is the difference between procedural and declarative constraints?
+3. What is the use of `NOT NULL`?
+4. What is the use of `UNIQUE`?
+5. What is the use of `DEFAULT`?
+6. What is the use of `CHECK`?
+7. What is a primary key?
+8. What is a foreign key?
+9. What is referential integrity?
+
+## SQL Practice
+
+### Question 1
+
+Create a `student` table with:
+
+```text
+student_id
+student_name
+email
+age
+department
+```
+
+Use:
+
+* Primary Key
+* NOT NULL
+* UNIQUE
+* CHECK
+* DEFAULT
+
+### Question 2
+
+Create two tables:
+
+```text
+department
+employee
+```
+
+Use `PRIMARY KEY` and `FOREIGN KEY` to establish a relationship.
+
+### Question 3
+
+Try inserting duplicate values into a `UNIQUE` column.
+
+### Question 4
+
+Try inserting a value that violates a `CHECK` constraint.
+
+### Question 5
+
+Try inserting a non-existing foreign key value and observe the error.
+
+---
+
+# Day 6 Conclusion
+
+Today we learned how MySQL maintains data integrity using constraints.
+
+The most important constraints to remember are:
+
+```text
+NOT NULL
+UNIQUE
+DEFAULT
+CHECK
+PRIMARY KEY
+FOREIGN KEY
+```
+
+These constraints are very important in real-world database development because they help ensure that the database contains **valid, accurate, and consistent data**.
