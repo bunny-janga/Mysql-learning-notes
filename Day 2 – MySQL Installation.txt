@@ -1,0 +1,506 @@
+# Day 2 – MySQL Installation
+
+## Introduction
+
+MySQL is an open-source **Relational Database Management System (RDBMS)** used to store, manage, and retrieve data.
+
+Before working with MySQL, we need to install and configure the required MySQL components.
+
+---
+
+# MySQL Components
+
+During MySQL setup, the following components can be used:
+
+### 1. MySQL Server
+
+MySQL Server is the main database server that:
+
+* Stores databases and tables.
+* Processes SQL queries.
+* Manages data.
+* Handles client connections.
+* Performs database operations.
+
+### 2. MySQL Workbench
+
+MySQL Workbench is a graphical tool used to:
+
+* Connect to MySQL Server.
+* Write and execute SQL queries.
+* Create databases and tables.
+* View and manage database objects.
+* Design database structures.
+* Monitor database connections.
+
+### 3. MySQL Shell
+
+MySQL Shell is a command-line interface used to interact with MySQL Server.
+
+It supports:
+
+* SQL
+* JavaScript
+* Python
+
+---
+
+# Requirements Before Installation
+
+Before installing MySQL on Windows, make sure you have:
+
+* A Windows computer.
+* Administrator access.
+* Internet connection if using the web installer.
+* Sufficient disk space.
+* A password that you can remember for the MySQL `root` account.
+
+---
+
+# MySQL Installation on Windows
+
+## Step 1: Download MySQL Installer
+
+Download the MySQL Installer for Windows from the official MySQL website.
+
+The installer provides an easy way to install and configure MySQL products.
+
+---
+
+## Step 2: Choose Setup Type
+
+During installation, you may see different setup types.
+
+Common options include:
+
+* Developer Default
+* Server Only
+* Client Only
+* Full
+* Custom
+
+### Developer Default
+
+**Developer Default** is useful for learning and development because it can install MySQL Server and development tools such as MySQL Workbench.
+
+### Server Only
+
+Installs the MySQL Server without the complete set of development tools.
+
+### Client Only
+
+Installs client applications and tools without installing the MySQL Server.
+
+### Full
+
+Installs the available MySQL products included by the installer.
+
+### Custom
+
+Allows you to select the individual components that you want to install.
+
+---
+
+# Step 3: Check Requirements
+
+The installer may check whether your system has the required software.
+
+If a required component is missing, the installer may ask you to install it.
+
+Complete the required installation and continue.
+
+---
+
+# Step 4: Install MySQL Server
+
+Select **MySQL Server** as one of the components to install.
+
+The MySQL Server is responsible for storing and managing the databases.
+
+Click **Execute** to begin the installation.
+
+Wait until the installation is completed successfully.
+
+---
+
+# Step 5: Configure MySQL Server
+
+After installing MySQL Server, the installer will ask you to configure it.
+
+Important configuration options include:
+
+* Server configuration type
+* Port number
+* Authentication method
+* Root password
+* Windows Service
+
+---
+
+# Step 6: Configure Server Type
+
+MySQL provides different server configuration options depending on the installer version.
+
+For a local development environment, the default configuration is generally sufficient.
+
+---
+
+# Step 7: Configure MySQL Port
+
+MySQL commonly uses:
+
+```text
+3306
+```
+
+as its default port.
+
+The port allows client applications such as MySQL Workbench or application programs to communicate with the MySQL Server.
+
+Example:
+
+```text
+Host: localhost
+Port: 3306
+```
+
+If another application is already using port `3306`, a different available port can be configured.
+
+---
+
+# Step 8: Authentication
+
+During installation, MySQL asks you to configure the authentication method.
+
+Use the recommended authentication method provided by the current MySQL installer unless your project specifically requires another method.
+
+---
+
+# Step 9: Set Root Password
+
+The `root` user is a highly privileged MySQL account.
+
+During installation, set a strong password for the `root` account.
+
+Example:
+
+```text
+Username: root
+Password: ********
+```
+
+### Important
+
+Do not share your MySQL password publicly or upload it to GitHub.
+
+---
+
+# Step 10: Configure MySQL as a Windows Service
+
+MySQL can be configured as a **Windows Service**.
+
+A Windows Service allows MySQL Server to run in the background and start automatically according to the configured service settings.
+
+The service name may commonly appear as:
+
+```text
+MySQL80
+```
+
+The exact service name can depend on the installed MySQL version and configuration.
+
+---
+
+# Step 11: Complete Installation
+
+Click **Execute** to apply the configuration.
+
+Wait for all required components to be installed and configured successfully.
+
+Click **Finish** after the installation is completed.
+
+---
+
+# Verify MySQL Installation
+
+After installation, we should verify that MySQL Server is working correctly.
+
+There are multiple ways to verify the installation.
+
+---
+
+## Method 1: MySQL Workbench
+
+Open **MySQL Workbench**.
+
+Create or select a connection.
+
+Typical local connection details:
+
+```text
+Connection Name: Local MySQL
+Hostname: localhost
+Port: 3306
+Username: root
+```
+
+Enter the password that you configured during installation.
+
+If the connection is successful, MySQL Server is running correctly.
+
+---
+
+# Method 2: MySQL Command Line
+
+Open Command Prompt or PowerShell.
+
+Run:
+
+```bash
+mysql -u root -p
+```
+
+You will be asked for the MySQL root password.
+
+Enter the password.
+
+If the login is successful, you will see the MySQL command prompt.
+
+Example:
+
+```text
+mysql>
+```
+
+---
+
+# Basic MySQL Commands
+
+After connecting to MySQL, we can execute SQL commands.
+
+### Check MySQL Version
+
+```sql
+SELECT VERSION();
+```
+
+### Show Databases
+
+```sql
+SHOW DATABASES;
+```
+
+### Create a Database
+
+```sql
+CREATE DATABASE college;
+```
+
+### Select a Database
+
+```sql
+USE college;
+```
+
+### Create a Table
+
+```sql
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+```
+
+### Show Tables
+
+```sql
+SHOW TABLES;
+```
+
+### Insert Data
+
+```sql
+INSERT INTO students (id, name, age)
+VALUES (1, 'Ravi', 20);
+```
+
+### Display Data
+
+```sql
+SELECT * FROM students;
+```
+
+---
+
+# MySQL Installation Flow
+
+```text
+Download MySQL Installer
+        ↓
+Choose Setup Type
+        ↓
+Check Requirements
+        ↓
+Install MySQL Server
+        ↓
+Configure MySQL Server
+        ↓
+Set Port
+        ↓
+Configure Authentication
+        ↓
+Set Root Password
+        ↓
+Configure Windows Service
+        ↓
+Complete Installation
+        ↓
+Open MySQL Workbench / Command Line
+        ↓
+Connect to MySQL Server
+        ↓
+Run SQL Commands
+```
+
+# Important Terms
+
+### MySQL Server
+
+The database server that stores and manages data and processes SQL requests.
+
+### MySQL Workbench
+
+A graphical application for working with MySQL databases.
+
+### Root User
+
+A highly privileged MySQL account used for administrative tasks.
+
+### Host
+
+The machine where the MySQL Server is running.
+
+For a local installation:
+
+```text
+localhost
+```
+
+### Port
+
+The network endpoint used to connect to MySQL Server.
+
+Default MySQL port:
+
+```text
+3306
+```
+
+### Database
+
+An organized collection of related data.
+
+### Table
+
+A database object that stores data in rows and columns.
+
+### SQL
+
+**SQL** stands for **Structured Query Language** and is used to communicate with relational databases.
+
+---
+
+# Common Installation Issues
+
+## 1. Port 3306 Already in Use
+
+If port `3306` is already being used by another service, MySQL may fail to start.
+
+Possible solution:
+
+* Check which application is using the port.
+* Stop the conflicting service if appropriate.
+* Configure MySQL to use another available port.
+
+---
+
+## 2. MySQL Server Is Not Running
+
+If MySQL Workbench cannot connect to the server, check whether the MySQL Windows Service is running.
+
+You can open:
+
+```text
+Windows → Services
+```
+
+and look for the MySQL service.
+
+---
+
+## 3. Access Denied
+
+If you receive an authentication error, verify:
+
+* Username
+* Password
+* Host
+* Port
+
+For a local installation, a common configuration is:
+
+```text
+Username: root
+Host: localhost
+Port: 3306
+```
+
+---
+
+## 4. `mysql` Command Not Recognized
+
+If this command:
+
+```bash
+mysql -u root -p
+```
+
+is not recognized, the MySQL `bin` directory may not be included in the system PATH.
+
+You can either:
+
+* Run MySQL using its full executable path.
+* Add the MySQL `bin` directory to the Windows PATH environment variable.
+
+---
+
+# Security Best Practices
+
+* Use a strong MySQL password.
+* Never upload passwords to GitHub.
+* Do not commit `.env` files containing database credentials.
+* Avoid using the `root` account in production applications.
+* Create separate database users with only the permissions they need.
+* Keep MySQL updated.
+* Use secure connections when required.
+
+---
+
+# Day 2 Summary
+
+Today we learned:
+
+* What MySQL Server is.
+* What MySQL Workbench is.
+* What MySQL Shell is.
+* MySQL installation requirements.
+* MySQL installation steps.
+* MySQL Server configuration.
+* MySQL default port.
+* Root user and password.
+* MySQL Windows Service.
+* How to verify MySQL installation.
+* Basic MySQL commands.
+* Common MySQL installation issues.
+* Basic MySQL security practices.
