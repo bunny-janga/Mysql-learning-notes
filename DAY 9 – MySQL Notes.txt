@@ -1,0 +1,822 @@
+: Operators, Predicates, Aliases & NULL
+
+Today I learned about different types of operators and predicates in MySQL. These are very useful when filtering, comparing, calculating, and working with data in SQL queries.
+
+---
+
+# 1. Arithmetic Operators
+
+Arithmetic operators are used to perform mathematical calculations on numeric values.
+
+### Common Arithmetic Operators
+
+| Operator | Meaning             | Example  |
+| -------- | ------------------- | -------- |
+| `+`      | Addition            | `10 + 5` |
+| `-`      | Subtraction         | `10 - 5` |
+| `*`      | Multiplication      | `10 * 5` |
+| `/`      | Division            | `10 / 5` |
+| `%`      | Modulus (remainder) | `10 % 3` |
+
+### Example
+
+```sql
+SELECT 10 + 5 AS addition;
+SELECT 10 - 5 AS subtraction;
+SELECT 10 * 5 AS multiplication;
+SELECT 10 / 5 AS division;
+SELECT 10 % 3 AS remainder;
+```
+
+### Real-Time Example
+
+Suppose an employee has a salary of `30000` and receives a bonus of `5000`.
+
+```sql
+SELECT 30000 + 5000 AS total_salary;
+```
+
+Output:
+
+```text
+35000
+```
+
+---
+
+# 2. Relational Operators
+
+Relational operators are used to compare two values.
+
+### Common Relational Operators
+
+| Operator | Meaning                  |
+| -------- | ------------------------ |
+| `=`      | Equal to                 |
+| `!=`     | Not equal to             |
+| `<>`     | Not equal to             |
+| `>`      | Greater than             |
+| `<`      | Less than                |
+| `>=`     | Greater than or equal to |
+| `<=`     | Less than or equal to    |
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE salary > 30000;
+```
+
+This query returns employees whose salary is greater than `30000`.
+
+### More Examples
+
+```sql
+SELECT *
+FROM employees
+WHERE salary = 30000;
+
+SELECT *
+FROM employees
+WHERE salary >= 30000;
+
+SELECT *
+FROM employees
+WHERE salary <= 30000;
+
+SELECT *
+FROM employees
+WHERE department != 'HR';
+```
+
+---
+
+# 3. Logical Operators
+
+Logical operators are used to combine multiple conditions.
+
+### Main Logical Operators
+
+| Operator | Meaning                             |
+| -------- | ----------------------------------- |
+| `AND`    | All conditions must be true         |
+| `OR`     | At least one condition must be true |
+| `NOT`    | Reverses a condition                |
+
+### AND
+
+```sql
+SELECT *
+FROM employees
+WHERE salary > 30000
+AND department = 'IT';
+```
+
+Both conditions must be true.
+
+### OR
+
+```sql
+SELECT *
+FROM employees
+WHERE department = 'IT'
+OR department = 'HR';
+```
+
+Either condition can be true.
+
+### NOT
+
+```sql
+SELECT *
+FROM employees
+WHERE NOT department = 'HR';
+```
+
+This returns employees who are not from the HR department.
+
+---
+
+# 4. Bitwise Operators
+
+Bitwise operators work at the binary/bit level of numbers.
+
+### Common Bitwise Operators
+
+| Operator | Meaning     |            |
+| -------- | ----------- | ---------- |
+| `&`      | Bitwise AND |            |
+| `        | `           | Bitwise OR |
+| `^`      | Bitwise XOR |            |
+| `<<`     | Left shift  |            |
+| `>>`     | Right shift |            |
+
+### Example
+
+```sql
+SELECT 5 & 3;
+```
+
+Binary representation:
+
+```text
+5 = 101
+3 = 011
+---------
+    001 = 1
+```
+
+So the result is:
+
+```text
+1
+```
+
+Another example:
+
+```sql
+SELECT 5 | 3;
+```
+
+Result:
+
+```text
+7
+```
+
+Bitwise operators are less common in basic SQL queries but can be useful when working with flags, permissions, and binary data.
+
+---
+
+# 5. Assignment Operators
+
+Assignment operators are used to assign or update values.
+
+In MySQL, the assignment operator commonly used is:
+
+```sql
+=
+```
+
+Example:
+
+```sql
+UPDATE employees
+SET salary = 40000
+WHERE employee_id = 101;
+```
+
+Here:
+
+```text
+salary = 40000
+```
+
+assigns the value `40000` to the salary column.
+
+MySQL also supports assignment using `:=` in certain contexts, especially with variables.
+
+Example:
+
+```sql
+SET @salary := 40000;
+```
+
+---
+
+# 6. EXISTS Operator
+
+`EXISTS` is used to check whether a subquery returns at least one row.
+
+It returns:
+
+```text
+TRUE
+```
+
+if the subquery returns one or more rows.
+
+### Example
+
+Suppose we have:
+
+```text
+employees
+departments
+```
+
+We want to find employees who belong to an existing department.
+
+```sql
+SELECT *
+FROM employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM departments d
+    WHERE d.department_id = e.department_id
+);
+```
+
+### Important Point
+
+`EXISTS` does not return the rows from the subquery. It simply checks whether matching rows exist.
+
+---
+
+# 7. BETWEEN Operator
+
+`BETWEEN` is used to check whether a value falls within a specified range.
+
+### Syntax
+
+```sql
+column_name BETWEEN value1 AND value2
+```
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE salary BETWEEN 30000 AND 50000;
+```
+
+This returns employees whose salary is between `30000` and `50000`.
+
+### Important
+
+`BETWEEN` is **inclusive**, meaning both boundary values are included.
+
+So:
+
+```sql
+BETWEEN 30000 AND 50000
+```
+
+includes:
+
+```text
+30000
+50000
+```
+
+### NOT BETWEEN
+
+```sql
+SELECT *
+FROM employees
+WHERE salary NOT BETWEEN 30000 AND 50000;
+```
+
+This returns employees whose salary is outside that range.
+
+---
+
+# 8. IN Operator
+
+The `IN` operator is used when we want to compare a column with multiple possible values.
+
+Instead of writing multiple `OR` conditions, we can use `IN`.
+
+### Without IN
+
+```sql
+SELECT *
+FROM employees
+WHERE department = 'IT'
+OR department = 'HR'
+OR department = 'Sales';
+```
+
+### Using IN
+
+```sql
+SELECT *
+FROM employees
+WHERE department IN ('IT', 'HR', 'Sales');
+```
+
+This is shorter and easier to read.
+
+### NOT IN
+
+```sql
+SELECT *
+FROM employees
+WHERE department NOT IN ('IT', 'HR');
+```
+
+This returns employees who are not from IT or HR.
+
+---
+
+# 9. LIKE Operator
+
+`LIKE` is used for pattern matching in strings.
+
+It is commonly used with the `WHERE` clause.
+
+### Wildcards
+
+MySQL mainly uses:
+
+| Wildcard | Meaning                  |
+| -------- | ------------------------ |
+| `%`      | Any number of characters |
+| `_`      | Exactly one character    |
+
+---
+
+## `%` Wildcard
+
+Find names starting with `A`:
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE 'A%';
+```
+
+Examples that can match:
+
+```text
+Arun
+Anil
+Akhil
+```
+
+---
+
+Find names ending with `n`:
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE '%n';
+```
+
+---
+
+Find names containing `an`:
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE '%an%';
+```
+
+---
+
+## `_` Wildcard
+
+The underscore represents exactly one character.
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE 'A_i%';
+```
+
+The pattern means:
+
+```text
+A
+one character
+i
+any number of characters
+```
+
+---
+
+# 10. ISNULL() Function
+
+`ISNULL()` is a MySQL function used to check whether an expression is `NULL`.
+
+### Syntax
+
+```sql
+ISNULL(expression)
+```
+
+It returns:
+
+```text
+1 → expression is NULL
+0 → expression is NOT NULL
+```
+
+### Example
+
+```sql
+SELECT ISNULL(NULL);
+```
+
+Output:
+
+```text
+1
+```
+
+Another example:
+
+```sql
+SELECT ISNULL('Hello');
+```
+
+Output:
+
+```text
+0
+```
+
+### Using ISNULL() with a Table
+
+```sql
+SELECT name, ISNULL(phone) AS phone_missing
+FROM employees;
+```
+
+If the phone number is `NULL`, the result will be `1`.
+
+Otherwise, it will be `0`.
+
+---
+
+# 11. Column Aliases – AS
+
+An alias gives a temporary name to a column or table.
+
+The `AS` keyword is commonly used to create an alias.
+
+### Example
+
+```sql
+SELECT name AS employee_name
+FROM employees;
+```
+
+Instead of displaying the column name:
+
+```text
+name
+```
+
+the result displays:
+
+```text
+employee_name
+```
+
+### Alias for Calculated Columns
+
+```sql
+SELECT salary * 12 AS annual_salary
+FROM employees;
+```
+
+Here:
+
+```text
+salary * 12
+```
+
+is given the temporary name:
+
+```text
+annual_salary
+```
+
+### Alias for Tables
+
+```sql
+SELECT e.name, e.salary
+FROM employees AS e;
+```
+
+Here:
+
+```text
+employees AS e
+```
+
+means we can use `e` as a short name for the `employees` table.
+
+---
+
+# 12. Predicates – BETWEEN
+
+A predicate is a condition that evaluates to either `TRUE`, `FALSE`, or sometimes `UNKNOWN` when `NULL` is involved.
+
+`BETWEEN` is one type of predicate.
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE age BETWEEN 20 AND 30;
+```
+
+This finds employees whose age is between 20 and 30, including 20 and 30.
+
+### NOT BETWEEN
+
+```sql
+SELECT *
+FROM employees
+WHERE age NOT BETWEEN 20 AND 30;
+```
+
+---
+
+# 13. Predicates – IN
+
+`IN` is another commonly used predicate.
+
+It checks whether a value matches any value from a given list.
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE city IN ('Guntur', 'Vijayawada', 'Hyderabad');
+```
+
+This returns employees whose city is one of the listed cities.
+
+### NOT IN
+
+```sql
+SELECT *
+FROM employees
+WHERE city NOT IN ('Guntur', 'Vijayawada');
+```
+
+---
+
+# 14. Predicates – LIKE
+
+`LIKE` is also used as a predicate for pattern matching.
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE 'S%';
+```
+
+This returns employees whose names start with `S`.
+
+### More Examples
+
+```sql
+-- Starts with A
+WHERE name LIKE 'A%';
+
+-- Ends with a
+WHERE name LIKE '%a';
+
+-- Contains "an"
+WHERE name LIKE '%an%';
+
+-- Exactly 5 characters
+WHERE name LIKE '_____';
+```
+
+---
+
+# 15. IS NULL Predicate
+
+`IS NULL` is used to check whether a column contains a `NULL` value.
+
+### Example
+
+```sql
+SELECT *
+FROM employees
+WHERE phone IS NULL;
+```
+
+This returns employees who do not have a phone number stored.
+
+### IS NOT NULL
+
+```sql
+SELECT *
+FROM employees
+WHERE phone IS NOT NULL;
+```
+
+This returns employees whose phone number is available.
+
+---
+
+# ⚠️ NULL vs 0 vs Empty String
+
+These three values are different.
+
+### NULL
+
+Means the value is unknown or not provided.
+
+```text
+NULL
+```
+
+### 0
+
+Means the actual numeric value is zero.
+
+```text
+0
+```
+
+### Empty String
+
+Means a string exists but contains no characters.
+
+```text
+''
+```
+
+For example:
+
+```sql
+phone IS NULL
+```
+
+is correct for checking `NULL`.
+
+Do **not** use:
+
+```sql
+phone = NULL
+```
+
+This does not correctly check for NULL.
+
+Use:
+
+```sql
+phone IS NULL
+```
+
+or:
+
+```sql
+phone IS NOT NULL
+```
+
+---
+
+#  Quick Revision
+
+| Topic      | Purpose                   | Example                          |
+| ---------- | ------------------------- | -------------------------------- |
+| Arithmetic | Mathematical calculations | `salary * 12`                    |
+| Relational | Compare values            | `salary > 30000`                 |
+| Logical    | Combine conditions        | `AND`, `OR`, `NOT`               |
+| Bitwise    | Work with bits            | `5 & 3`                          |
+| Assignment | Assign values             | `SET salary = 40000`             |
+| EXISTS     | Check if rows exist       | `WHERE EXISTS (...)`             |
+| BETWEEN    | Check a range             | `salary BETWEEN 30000 AND 50000` |
+| IN         | Match multiple values     | `city IN (...)`                  |
+| LIKE       | Pattern matching          | `name LIKE 'A%'`                 |
+| ISNULL()   | Check expression for NULL | `ISNULL(phone)`                  |
+| AS         | Give temporary alias      | `salary AS monthly_salary`       |
+| IS NULL    | Check column for NULL     | `phone IS NULL`                  |
+
+---
+
+#  Real-Time Example
+
+Suppose we have an `employees` table:
+
+```sql
+CREATE TABLE employees (
+    employee_id INT,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT,
+    city VARCHAR(50),
+    phone VARCHAR(15)
+);
+```
+
+We can use today's concepts like this:
+
+### Employees with salary between 30,000 and 50,000
+
+```sql
+SELECT *
+FROM employees
+WHERE salary BETWEEN 30000 AND 50000;
+```
+
+### Employees from IT or HR
+
+```sql
+SELECT *
+FROM employees
+WHERE department IN ('IT', 'HR');
+```
+
+### Employees whose name starts with A
+
+```sql
+SELECT *
+FROM employees
+WHERE name LIKE 'A%';
+```
+
+### Employees without a phone number
+
+```sql
+SELECT *
+FROM employees
+WHERE phone IS NULL;
+```
+
+### Display salary with an alias
+
+```sql
+SELECT name, salary AS monthly_salary
+FROM employees;
+```
+
+### Display annual salary
+
+```sql
+SELECT name, salary * 12 AS annual_salary
+FROM employees;
+```
+
+---
+
+#  Key Takeaways
+
+* Arithmetic operators are used for calculations.
+* Relational operators are used for comparisons.
+* Logical operators combine multiple conditions.
+* Bitwise operators work at the binary level.
+* `EXISTS` checks whether a subquery returns rows.
+* `BETWEEN` checks a range and includes both boundaries.
+* `IN` is useful when checking multiple possible values.
+* `LIKE` is used for pattern matching.
+* `%` represents zero or more characters.
+* `_` represents exactly one character.
+* `ISNULL()` checks whether an expression is `NULL`.
+* `AS` creates a temporary column or table alias.
+* `IS NULL` is the correct way to check for `NULL`.
+* `= NULL` should not be used to check for NULL values.
+
+---
+
+##  Day 9 Summary
+
+Today I learned how MySQL operators and predicates help us **calculate values, compare data, combine conditions, search patterns, filter ranges, check multiple values, work with NULL values, and make query results easier to understand using aliases**.
+
+These concepts are very important because they are used frequently in real-world SQL queries, backend development, data analysis, and database interviews.
