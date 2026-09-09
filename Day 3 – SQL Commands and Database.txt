@@ -1,0 +1,426 @@
+# Day 3 – SQL Commands and Database Operations
+
+## 1. History & Features of SQL
+
+### History of SQL
+
+**SQL** stands for **Structured Query Language**.
+
+SQL was originally developed at **IBM** in the 1970s. It was initially called **SEQUEL (Structured English Query Language)** and was designed for managing and manipulating data in relational databases.
+
+SQL later became a standard language used for working with relational database systems.
+
+### Features of SQL
+
+1. Easy to learn and use.
+2. Used to create and manage databases.
+3. Used to create and modify tables.
+4. Used to insert, update, delete, and retrieve data.
+5. Provides security and access control.
+6. Supports transactions.
+7. Supports data integrity through constraints.
+8. Can handle large amounts of data.
+9. Allows applications to communicate with databases.
+10. Used by many relational database systems such as MySQL, PostgreSQL, Oracle Database, and SQL Server.
+
+---
+
+# 2. Types of SQL Commands
+
+SQL commands are commonly categorized into five major types:
+
+1. **DDL – Data Definition Language**
+2. **DML – Data Manipulation Language**
+3. **DQL – Data Query Language**
+4. **DCL – Data Control Language**
+5. **TCL – Transaction Control Language**
+
+---
+
+# 3. DDL – Data Definition Language
+
+**DDL** stands for **Data Definition Language**.
+
+DDL commands are used to define and modify the structure of database objects such as databases and tables.
+
+### Common DDL Commands
+
+* `CREATE`
+* `ALTER`
+* `DROP`
+* `TRUNCATE`
+
+### Example
+
+```sql
+CREATE DATABASE college;
+```
+
+---
+
+# 4. DML – Data Manipulation Language
+
+**DML** stands for **Data Manipulation Language**.
+
+DML commands are used to insert, update, and delete data stored in database tables.
+
+### Common DML Commands
+
+* `INSERT`
+* `UPDATE`
+* `DELETE`
+
+### Example
+
+```sql
+INSERT INTO students (id, name, age)
+VALUES (1, 'Ravi', 20);
+```
+
+---
+
+# 5. DQL – Data Query Language
+
+**DQL** stands for **Data Query Language**.
+
+DQL is used to retrieve data from database tables.
+
+### Command
+
+* `SELECT`
+
+### Example
+
+```sql
+SELECT * FROM students;
+```
+
+### Selecting Specific Columns
+
+```sql
+SELECT name, age
+FROM students;
+```
+
+---
+
+# 6. DCL – Data Control Language
+
+**DCL** stands for **Data Control Language**.
+
+DCL commands are used to control user access and permissions in a database.
+
+### Common DCL Commands
+
+* `GRANT`
+* `REVOKE`
+
+### Example
+
+```sql
+GRANT SELECT ON college.students TO 'user1'@'localhost';
+```
+
+### REVOKE
+
+The `REVOKE` command removes previously granted privileges.
+
+```sql
+REVOKE SELECT ON college.students FROM 'user1'@'localhost';
+```
+
+---
+
+# 7. TCL – Transaction Control Language
+
+**TCL** stands for **Transaction Control Language**.
+
+TCL commands are used to manage transactions in a database.
+
+### Common TCL Commands
+
+* `COMMIT`
+* `ROLLBACK`
+* `SAVEPOINT`
+
+## COMMIT
+
+`COMMIT` permanently saves the changes made during the current transaction.
+
+```sql
+COMMIT;
+```
+
+## ROLLBACK
+
+`ROLLBACK` undoes changes that have not yet been committed.
+
+```sql
+ROLLBACK;
+```
+
+## SAVEPOINT
+
+`SAVEPOINT` creates a point within a transaction to which you can later roll back.
+
+```sql
+SAVEPOINT sp1;
+```
+
+---
+
+# 8. CREATE DATABASE
+
+The `CREATE DATABASE` command is used to create a new database.
+
+### Syntax
+
+```sql
+CREATE DATABASE database_name;
+```
+
+### Example
+
+```sql
+CREATE DATABASE college;
+```
+
+### Create Database If It Does Not Exist
+
+```sql
+CREATE DATABASE IF NOT EXISTS college;
+```
+
+This avoids an error if the database already exists.
+
+---
+
+# 9. ALTER DATABASE
+
+The `ALTER DATABASE` statement is used to modify certain properties of a database.
+
+### Example
+
+```sql
+ALTER DATABASE college
+CHARACTER SET utf8mb4;
+```
+
+> In MySQL, structural changes to tables are commonly performed using `ALTER TABLE`.
+
+### Example – ALTER TABLE
+
+```sql
+ALTER TABLE students
+ADD email VARCHAR(100);
+```
+
+---
+
+# 10. DROP DATABASE
+
+The `DROP DATABASE` command is used to permanently delete a database and all objects contained within it.
+
+### Syntax
+
+```sql
+DROP DATABASE database_name;
+```
+
+### Example
+
+```sql
+DROP DATABASE college;
+```
+
+### Safer Version
+
+```sql
+DROP DATABASE IF EXISTS college;
+```
+
+> **Warning:** `DROP DATABASE` permanently removes the database, tables, and data. Use it carefully.
+
+---
+
+# 11. USE
+
+The `USE` command is used to select a database as the current database.
+
+### Syntax
+
+```sql
+USE database_name;
+```
+
+### Example
+
+```sql
+USE college;
+```
+
+After selecting a database, you can create tables and perform operations on its objects.
+
+### Example
+
+```sql
+USE college;
+
+CREATE TABLE students (
+    id INT,
+    name VARCHAR(50),
+    age INT
+);
+```
+
+---
+
+# 12. SHOW DATABASES
+
+The `SHOW DATABASES` command is used to display the databases available to the current MySQL account.
+
+### Syntax
+
+```sql
+SHOW DATABASES;
+```
+
+### Example
+
+```sql
+SHOW DATABASES;
+```
+
+### Sample Output
+
+```text
+information_schema
+mysql
+performance_schema
+sys
+college
+```
+
+The databases displayed depend on the databases available on the MySQL Server and the permissions of the current user.
+
+---
+
+# 13. Basic Database Workflow
+
+A simple workflow for creating and using a database is:
+
+```text
+CREATE DATABASE
+       ↓
+SHOW DATABASES
+       ↓
+USE DATABASE
+       ↓
+CREATE TABLE
+       ↓
+INSERT DATA
+       ↓
+SELECT DATA
+```
+
+### Example
+
+```sql
+CREATE DATABASE college;
+
+SHOW DATABASES;
+
+USE college;
+
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+INSERT INTO students (id, name, age)
+VALUES (1, 'Ravi', 20);
+
+SELECT * FROM students;
+```
+
+---
+
+# SQL Command Summary
+
+| Category | Full Form                    | Common Commands                       | Purpose                                 |
+| -------- | ---------------------------- | ------------------------------------- | --------------------------------------- |
+| DDL      | Data Definition Language     | `CREATE`, `ALTER`, `DROP`, `TRUNCATE` | Defines and modifies database structure |
+| DML      | Data Manipulation Language   | `INSERT`, `UPDATE`, `DELETE`          | Modifies table data                     |
+| DQL      | Data Query Language          | `SELECT`                              | Retrieves data                          |
+| DCL      | Data Control Language        | `GRANT`, `REVOKE`                     | Controls user permissions               |
+| TCL      | Transaction Control Language | `COMMIT`, `ROLLBACK`, `SAVEPOINT`     | Manages transactions                    |
+
+---
+
+# Quick Revision
+
+```text
+SQL
+│
+├── DDL → CREATE, ALTER, DROP, TRUNCATE
+│
+├── DML → INSERT, UPDATE, DELETE
+│
+├── DQL → SELECT
+│
+├── DCL → GRANT, REVOKE
+│
+└── TCL → COMMIT, ROLLBACK, SAVEPOINT
+```
+
+# Important Commands
+
+```sql
+-- Create a database
+CREATE DATABASE college;
+
+-- Display databases
+SHOW DATABASES;
+
+-- Select a database
+USE college;
+
+-- Create a table
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+
+-- Insert data
+INSERT INTO students (id, name, age)
+VALUES (1, 'Ravi', 20);
+
+-- Retrieve data
+SELECT * FROM students;
+
+-- Delete a database
+DROP DATABASE college;
+```
+
+# Day 3 Summary
+
+### Topics Covered
+
+* History of SQL
+* Features of SQL
+* Types of SQL Commands
+* DDL
+* DML
+* DQL
+* DCL
+* TCL
+* CREATE DATABASE
+* ALTER DATABASE
+* DROP DATABASE
+* USE
+* SHOW DATABASES
+* Basic Database Workflow
+* Basic SQL Commands
+
