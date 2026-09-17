@@ -1,0 +1,1081 @@
+ Day 11 – MySQL Notes
+
+## 📅 Day 11: Date/Time, Aggregate & System Functions
+
+Today I learned about three important categories of MySQL functions:
+
+1. **Date and Time Functions**
+2. **Aggregate Functions**
+3. **System Information Functions**
+
+These functions are very useful in real-world applications such as employee management systems, attendance systems, billing applications, e-commerce websites, and data analysis.
+
+---
+
+# 🕒 1. Date and Time Functions
+
+Date and time functions are used to work with dates, times, and timestamps.
+
+---
+
+# 1. NOW()
+
+`NOW()` returns the **current date and current time**.
+
+### Example
+
+```sql
+SELECT NOW();
+```
+
+Example output:
+
+```text
+2026-09-08 20:30:15
+```
+
+The actual result changes according to the current date and time.
+
+### Real-Time Example
+
+```sql
+SELECT name, NOW() AS current_datetime
+FROM employees;
+```
+
+This can be useful when recording when an operation was performed.
+
+---
+
+# 2. CURDATE()
+
+`CURDATE()` returns the **current date only**.
+
+### Example
+
+```sql
+SELECT CURDATE();
+```
+
+Example output:
+
+```text
+2026-09-08
+```
+
+### Difference
+
+```text
+NOW()     → Date + Time
+CURDATE() → Date only
+```
+
+---
+
+# 3. CURTIME()
+
+`CURTIME()` returns the **current time only**.
+
+### Example
+
+```sql
+SELECT CURTIME();
+```
+
+Example output:
+
+```text
+20:30:15
+```
+
+### Difference
+
+```text
+NOW()     → 2026-09-08 20:30:15
+CURDATE() → 2026-09-08
+CURTIME() → 20:30:15
+```
+
+---
+
+# 4. YEAR()
+
+`YEAR()` extracts the year from a date.
+
+### Example
+
+```sql
+SELECT YEAR('2026-09-08');
+```
+
+Output:
+
+```text
+2026
+```
+
+### Real-Time Example
+
+```sql
+SELECT name, YEAR(joining_date) AS joining_year
+FROM employees;
+```
+
+This displays the year in which each employee joined.
+
+---
+
+# 5. MONTH()
+
+`MONTH()` extracts the month number from a date.
+
+### Example
+
+```sql
+SELECT MONTH('2026-09-08');
+```
+
+Output:
+
+```text
+9
+```
+
+### Real-Time Example
+
+```sql
+SELECT name, MONTH(joining_date) AS joining_month
+FROM employees;
+```
+
+---
+
+# 6. DAY()
+
+`DAY()` extracts the day of the month from a date.
+
+### Example
+
+```sql
+SELECT DAY('2026-09-08');
+```
+
+Output:
+
+```text
+8
+```
+
+### Real-Time Example
+
+```sql
+SELECT name, DAY(joining_date) AS joining_day
+FROM employees;
+```
+
+---
+
+# 7. DAYNAME()
+
+`DAYNAME()` returns the name of the weekday for a given date.
+
+### Example
+
+```sql
+SELECT DAYNAME('2026-09-08');
+```
+
+Output:
+
+```text
+Tuesday
+```
+
+### Real-Time Example
+
+```sql
+SELECT joining_date, DAYNAME(joining_date) AS joining_day
+FROM employees;
+```
+
+This can be useful in attendance and scheduling applications.
+
+---
+
+# 8. DATEDIFF()
+
+`DATEDIFF()` returns the number of days between two dates.
+
+### Syntax
+
+```sql
+DATEDIFF(date1, date2)
+```
+
+The calculation is:
+
+```text
+date1 - date2
+```
+
+### Example
+
+```sql
+SELECT DATEDIFF('2026-09-20', '2026-09-08');
+```
+
+Output:
+
+```text
+12
+```
+
+### Real-Time Example
+
+Suppose an employee joined on:
+
+```text
+2026-01-01
+```
+
+We can calculate how many days have passed:
+
+```sql
+SELECT DATEDIFF(CURDATE(), joining_date) AS days_worked
+FROM employees;
+```
+
+---
+
+# 9. DATE_ADD()
+
+`DATE_ADD()` is used to add a specific amount of time to a date.
+
+### Syntax
+
+```sql
+DATE_ADD(date, INTERVAL value unit)
+```
+
+### Example
+
+Add 10 days:
+
+```sql
+SELECT DATE_ADD('2026-09-08', INTERVAL 10 DAY);
+```
+
+Output:
+
+```text
+2026-09-18
+```
+
+### Add Months
+
+```sql
+SELECT DATE_ADD('2026-09-08', INTERVAL 2 MONTH);
+```
+
+### Add Years
+
+```sql
+SELECT DATE_ADD('2026-09-08', INTERVAL 1 YEAR);
+```
+
+### Real-Time Example
+
+```sql
+SELECT joining_date,
+       DATE_ADD(joining_date, INTERVAL 1 YEAR) AS one_year_completed
+FROM employees;
+```
+
+---
+
+# 10. DATE_SUB()
+
+`DATE_SUB()` is used to subtract a specific amount of time from a date.
+
+### Syntax
+
+```sql
+DATE_SUB(date, INTERVAL value unit)
+```
+
+### Example
+
+```sql
+SELECT DATE_SUB('2026-09-08', INTERVAL 10 DAY);
+```
+
+Output:
+
+```text
+2026-08-29
+```
+
+### Subtract Months
+
+```sql
+SELECT DATE_SUB('2026-09-08', INTERVAL 2 MONTH);
+```
+
+### Subtract Years
+
+```sql
+SELECT DATE_SUB('2026-09-08', INTERVAL 1 YEAR);
+```
+
+### Real-Time Example
+
+Find the date 30 days before today:
+
+```sql
+SELECT DATE_SUB(CURDATE(), INTERVAL 30 DAY);
+```
+
+---
+
+# 11. DATE_FORMAT()
+
+`DATE_FORMAT()` is used to display a date in a specific format.
+
+### Syntax
+
+```sql
+DATE_FORMAT(date, format)
+```
+
+### Common Format Specifiers
+
+| Format | Meaning         |
+| ------ | --------------- |
+| `%Y`   | 4-digit year    |
+| `%y`   | 2-digit year    |
+| `%m`   | Month number    |
+| `%M`   | Full month name |
+| `%d`   | Day             |
+| `%D`   | Day with suffix |
+| `%H`   | Hour            |
+| `%i`   | Minutes         |
+| `%s`   | Seconds         |
+
+### Example
+
+```sql
+SELECT DATE_FORMAT('2026-09-08', '%d-%m-%Y');
+```
+
+Output:
+
+```text
+08-09-2026
+```
+
+Another example:
+
+```sql
+SELECT DATE_FORMAT('2026-09-08', '%M %d, %Y');
+```
+
+Output:
+
+```text
+September 08, 2026
+```
+
+### Real-Time Example
+
+```sql
+SELECT name,
+       DATE_FORMAT(joining_date, '%d-%m-%Y') AS joining_date
+FROM employees;
+```
+
+---
+
+# 12. STR_TO_DATE()
+
+`STR_TO_DATE()` converts a string into a date/time value using a specified format.
+
+### Syntax
+
+```sql
+STR_TO_DATE(string, format)
+```
+
+### Example
+
+Suppose the date is stored as:
+
+```text
+08-09-2026
+```
+
+We can convert it into a MySQL date:
+
+```sql
+SELECT STR_TO_DATE('08-09-2026', '%d-%m-%Y');
+```
+
+Output:
+
+```text
+2026-09-08
+```
+
+### Another Example
+
+```sql
+SELECT STR_TO_DATE('September 08, 2026', '%M %d, %Y');
+```
+
+### DATE_FORMAT vs STR_TO_DATE
+
+```text
+DATE_FORMAT()
+→ Date → Formatted String
+
+STR_TO_DATE()
+→ String → Date
+```
+
+This is an important difference to remember.
+
+---
+
+# 📊 2. Aggregate Functions
+
+Aggregate functions perform calculations on **multiple rows** and return a single result.
+
+The main aggregate functions are:
+
+```text
+COUNT()
+SUM()
+AVG()
+MAX()
+MIN()
+```
+
+They are commonly used with:
+
+```sql
+GROUP BY
+```
+
+and sometimes:
+
+```sql
+HAVING
+```
+
+---
+
+# 13. COUNT()
+
+`COUNT()` counts rows or values.
+
+### Count All Rows
+
+```sql
+SELECT COUNT(*)
+FROM employees;
+```
+
+This returns the total number of employees.
+
+### Count a Specific Column
+
+```sql
+SELECT COUNT(phone)
+FROM employees;
+```
+
+`COUNT(column)` counts non-NULL values in that column.
+
+### Example
+
+```sql
+SELECT COUNT(*) AS total_employees
+FROM employees;
+```
+
+---
+
+# 14. SUM()
+
+`SUM()` calculates the total of a numeric column.
+
+### Example
+
+```sql
+SELECT SUM(salary) AS total_salary
+FROM employees;
+```
+
+This returns the total salary of all employees.
+
+### Real-Time Example
+
+```sql
+SELECT SUM(salary) AS total_payroll
+FROM employees;
+```
+
+---
+
+# 15. AVG()
+
+`AVG()` calculates the average value of a numeric column.
+
+### Example
+
+```sql
+SELECT AVG(salary) AS average_salary
+FROM employees;
+```
+
+### Real-Time Example
+
+```sql
+SELECT AVG(salary) AS average_employee_salary
+FROM employees;
+```
+
+`AVG()` ignores `NULL` values in the column.
+
+---
+
+# 16. MAX()
+
+`MAX()` returns the highest value from a column.
+
+### Example
+
+```sql
+SELECT MAX(salary) AS highest_salary
+FROM employees;
+```
+
+This finds the employee salary with the highest value.
+
+### Another Example
+
+```sql
+SELECT MAX(joining_date) AS latest_joining_date
+FROM employees;
+```
+
+---
+
+# 17. MIN()
+
+`MIN()` returns the lowest value from a column.
+
+### Example
+
+```sql
+SELECT MIN(salary) AS lowest_salary
+FROM employees;
+```
+
+### Another Example
+
+```sql
+SELECT MIN(joining_date) AS earliest_joining_date
+FROM employees;
+```
+
+---
+
+# 🔥 Aggregate Functions Together
+
+We can use multiple aggregate functions in one query.
+
+```sql
+SELECT
+    COUNT(*) AS total_employees,
+    SUM(salary) AS total_salary,
+    AVG(salary) AS average_salary,
+    MAX(salary) AS highest_salary,
+    MIN(salary) AS lowest_salary
+FROM employees;
+```
+
+This single query can give us a quick summary of the employee data.
+
+---
+
+# 👥 Aggregate Functions with GROUP BY
+
+Aggregate functions become especially useful with `GROUP BY`.
+
+For example, to find the number of employees in each department:
+
+```sql
+SELECT department,
+       COUNT(*) AS employee_count
+FROM employees
+GROUP BY department;
+```
+
+To find the average salary in each department:
+
+```sql
+SELECT department,
+       AVG(salary) AS average_salary
+FROM employees
+GROUP BY department;
+```
+
+To find the highest salary in each department:
+
+```sql
+SELECT department,
+       MAX(salary) AS highest_salary
+FROM employees
+GROUP BY department;
+```
+
+---
+
+# 💻 3. System Information Functions
+
+System functions provide information about the MySQL server, current database, user, connection, and recently inserted IDs.
+
+---
+
+# 18. VERSION()
+
+`VERSION()` returns the version of the MySQL server currently being used.
+
+### Example
+
+```sql
+SELECT VERSION();
+```
+
+Example output:
+
+```text
+8.0.x
+```
+
+The exact version depends on the MySQL installation.
+
+### Why is it useful?
+
+It can help developers check which MySQL version is running because different versions may support different features.
+
+---
+
+# 19. DATABASE()
+
+`DATABASE()` returns the name of the currently selected database.
+
+### Example
+
+```sql
+SELECT DATABASE();
+```
+
+Example output:
+
+```text
+company_db
+```
+
+If no database is currently selected, the result can be:
+
+```text
+NULL
+```
+
+### Real-Time Example
+
+```sql
+USE company_db;
+
+SELECT DATABASE();
+```
+
+Output:
+
+```text
+company_db
+```
+
+---
+
+# 20. USER()
+
+`USER()` returns the current MySQL account information used for the connection.
+
+### Example
+
+```sql
+SELECT USER();
+```
+
+Example output:
+
+```text
+root@localhost
+```
+
+The exact result depends on the account and connection being used.
+
+---
+
+# 21. CONNECTION_ID()
+
+`CONNECTION_ID()` returns the unique connection ID of the current MySQL connection.
+
+### Example
+
+```sql
+SELECT CONNECTION_ID();
+```
+
+Example output:
+
+```text
+15
+```
+
+The number can be different for each connection.
+
+### Why is it useful?
+
+It can help when troubleshooting or identifying a particular MySQL session.
+
+---
+
+# 22. LAST_INSERT_ID()
+
+`LAST_INSERT_ID()` returns the automatically generated `AUTO_INCREMENT` value from the most recent successful insert for the current connection.
+
+### Example Table
+
+```sql
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    salary INT
+);
+```
+
+Insert a new employee:
+
+```sql
+INSERT INTO employees (name, salary)
+VALUES ('Bunny', 30000);
+```
+
+Now:
+
+```sql
+SELECT LAST_INSERT_ID();
+```
+
+might return:
+
+```text
+1
+```
+
+If the generated employee ID was `1`.
+
+### Another Example
+
+```sql
+INSERT INTO employees (name, salary)
+VALUES ('Rahul', 35000);
+
+SELECT LAST_INSERT_ID();
+```
+
+If MySQL generated ID `2`, the result will be:
+
+```text
+2
+```
+
+### Real-Time Use
+
+This is very useful when an application inserts a new record and immediately needs the generated ID.
+
+For example:
+
+```text
+Application
+     ↓
+INSERT new employee
+     ↓
+MySQL generates employee_id
+     ↓
+LAST_INSERT_ID()
+     ↓
+Application gets the new ID
+```
+
+---
+
+# 📌 Important Difference: Date Functions
+
+```text
+NOW()
+    ↓
+Current date + time
+
+CURDATE()
+    ↓
+Current date
+
+CURTIME()
+    ↓
+Current time
+
+YEAR()
+    ↓
+Extract year
+
+MONTH()
+    ↓
+Extract month
+
+DAY()
+    ↓
+Extract day
+
+DAYNAME()
+    ↓
+Weekday name
+
+DATEDIFF()
+    ↓
+Difference between dates
+
+DATE_ADD()
+    ↓
+Add time to a date
+
+DATE_SUB()
+    ↓
+Subtract time from a date
+
+DATE_FORMAT()
+    ↓
+Format a date as a string
+
+STR_TO_DATE()
+    ↓
+Convert a string into a date
+```
+
+---
+
+# 📌 Important Difference: Aggregate Functions
+
+```text
+COUNT() → Number of rows/values
+SUM()   → Total
+AVG()   → Average
+MAX()   → Highest value
+MIN()   → Lowest value
+```
+
+---
+
+# 📌 Important Difference: System Functions
+
+```text
+VERSION()
+        → MySQL server version
+
+DATABASE()
+        → Current database
+
+USER()
+        → Current MySQL account
+
+CONNECTION_ID()
+        → Current connection ID
+
+LAST_INSERT_ID()
+        → Latest AUTO_INCREMENT ID generated
+```
+
+---
+
+# 🧪 Real-Time Employee Example
+
+Let's assume we have:
+
+```sql
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    joining_date DATE
+);
+```
+
+### Count employees
+
+```sql
+SELECT COUNT(*) AS total_employees
+FROM employees;
+```
+
+### Calculate total salary
+
+```sql
+SELECT SUM(salary) AS total_salary
+FROM employees;
+```
+
+### Calculate average salary
+
+```sql
+SELECT AVG(salary) AS average_salary
+FROM employees;
+```
+
+### Find highest salary
+
+```sql
+SELECT MAX(salary) AS highest_salary
+FROM employees;
+```
+
+### Find lowest salary
+
+```sql
+SELECT MIN(salary) AS lowest_salary
+FROM employees;
+```
+
+### Find joining year
+
+```sql
+SELECT name,
+       YEAR(joining_date) AS joining_year
+FROM employees;
+```
+
+### Format joining date
+
+```sql
+SELECT name,
+       DATE_FORMAT(joining_date, '%d-%m-%Y') AS formatted_date
+FROM employees;
+```
+
+### Find employees who joined in 2026
+
+```sql
+SELECT *
+FROM employees
+WHERE YEAR(joining_date) = 2026;
+```
+
+### Calculate days since joining
+
+```sql
+SELECT name,
+       DATEDIFF(CURDATE(), joining_date) AS days_since_joining
+FROM employees;
+```
+
+### Find employees by department
+
+```sql
+SELECT department,
+       COUNT(*) AS total_employees
+FROM employees
+GROUP BY department;
+```
+
+### Find average salary by department
+
+```sql
+SELECT department,
+       AVG(salary) AS average_salary
+FROM employees
+GROUP BY department;
+```
+
+---
+
+# 📊 Quick Revision Table
+
+| Function           | Purpose                          | Example                          |
+| ------------------ | -------------------------------- | -------------------------------- |
+| `NOW()`            | Current date and time            | `NOW()`                          |
+| `CURDATE()`        | Current date                     | `CURDATE()`                      |
+| `CURTIME()`        | Current time                     | `CURTIME()`                      |
+| `YEAR()`           | Extract year                     | `YEAR(joining_date)`             |
+| `MONTH()`          | Extract month                    | `MONTH(joining_date)`            |
+| `DAY()`            | Extract day                      | `DAY(joining_date)`              |
+| `DAYNAME()`        | Weekday name                     | `DAYNAME(joining_date)`          |
+| `DATEDIFF()`       | Difference between dates         | `DATEDIFF(date1,date2)`          |
+| `DATE_ADD()`       | Add time to date                 | `DATE_ADD(date, INTERVAL 1 DAY)` |
+| `DATE_SUB()`       | Subtract time from date          | `DATE_SUB(date, INTERVAL 1 DAY)` |
+| `DATE_FORMAT()`    | Format date                      | `DATE_FORMAT(date,'%d-%m-%Y')`   |
+| `STR_TO_DATE()`    | Convert string to date           | `STR_TO_DATE(str,'%d-%m-%Y')`    |
+| `COUNT()`          | Count rows/values                | `COUNT(*)`                       |
+| `SUM()`            | Calculate total                  | `SUM(salary)`                    |
+| `AVG()`            | Calculate average                | `AVG(salary)`                    |
+| `MAX()`            | Find highest value               | `MAX(salary)`                    |
+| `MIN()`            | Find lowest value                | `MIN(salary)`                    |
+| `VERSION()`        | MySQL version                    | `VERSION()`                      |
+| `DATABASE()`       | Current database                 | `DATABASE()`                     |
+| `USER()`           | Current MySQL account            | `USER()`                         |
+| `CONNECTION_ID()`  | Current connection ID            | `CONNECTION_ID()`                |
+| `LAST_INSERT_ID()` | Last generated AUTO_INCREMENT ID | `LAST_INSERT_ID()`               |
+
+---
+
+# 🎯 Key Takeaways
+
+* `NOW()` gives the current date and time.
+* `CURDATE()` gives the current date.
+* `CURTIME()` gives the current time.
+* `YEAR()`, `MONTH()`, and `DAY()` extract parts of a date.
+* `DAYNAME()` returns the weekday name.
+* `DATEDIFF()` calculates the difference between two dates in days.
+* `DATE_ADD()` adds a time interval to a date.
+* `DATE_SUB()` subtracts a time interval from a date.
+* `DATE_FORMAT()` changes how a date is displayed.
+* `STR_TO_DATE()` converts formatted text into a date/time value.
+* `COUNT()`, `SUM()`, `AVG()`, `MAX()`, and `MIN()` are aggregate functions.
+* Aggregate functions are commonly used with `GROUP BY`.
+* `VERSION()` tells us the MySQL server version.
+* `DATABASE()` tells us which database is currently selected.
+* `USER()` shows the current MySQL account.
+* `CONNECTION_ID()` identifies the current connection.
+* `LAST_INSERT_ID()` retrieves the latest automatically generated ID for the current connection.
+
+---
+
+# 📝 Day 11 Summary
+
+Today I learned about **Date/Time, Aggregate, and System Information functions in MySQL**.
+
+Date and time functions are useful for working with dates, calculating differences, adding or subtracting dates, and formatting date values.
+
+Aggregate functions help us summarize data by calculating counts, totals, averages, minimum values, and maximum values.
+
+System functions provide useful information about the MySQL environment, such as the server version, current database, current user, connection ID, and the latest generated `AUTO_INCREMENT` ID.
+
+These functions are extremely useful in **real-world backend applications, employee management systems, attendance systems, e-commerce applications, reporting, data analysis, and SQL interviews**.
+
+
+
+
+
+
